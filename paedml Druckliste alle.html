@@ -1,0 +1,54 @@
+{#await gruppe then gruppeP}
+  {#each Object.entries(_.groupBy(gruppeP, 'Klasse')) as [klasse, schueler]}
+    {#each _.chunk(schueler, 10) as slice}
+      <div class="page" orientation="portrait" size="A4">
+        <div class="grid">
+          <b style="padding: 5px 0 0 5px">{klasse}</b>
+          {#each slice as s}
+            <div>
+              <table style="width: 100%; margin-bottom: 15px; margin-left: 30px">
+                <tr>
+                  <td style="width: 50%"><b>{s.Name}, {s.Vorname}</b></td>
+                  <td>Ihr Benutzername: b{s.ID}</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>Ihr Passwort: {h(s.ID)}</td>
+                </tr>
+              </table>
+            </div>
+            <hr>
+          {/each}
+        </div>
+      </div>
+    {/each}
+{/each}
+{/await}
+
+<style>
+  @import 'css/main.css';
+  .page {padding: 0;}
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    grid-gap: 20px;
+}
+</style>
+
+<script>
+  import Hashids from 'hashids'
+  export let schueler, knexConfig, privat
+  const _ = R('lodash')
+  const Schueler = R('models').Schueler
+  Schueler.knex(R('knex')(knexConfig))
+  const hashids = new Hashids(privat.salt, 8, 'abcdefghkmnpqrstuvwxyz23456789')
+  const h = (id) => hashids.encode(id)
+  let gruppe
+  $: gruppe = Schueler.query()
+          .where('Status', '2')
+          .andWhere('Geloescht', '-')
+          .andWhere('Gesperrt', '-')
+          .select('ID', 'Name', 'Vorname', 'Klasse')
+          .orderBy('Klasse')
+          .orderBy('Name')
+</script>
