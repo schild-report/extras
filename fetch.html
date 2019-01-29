@@ -1,0 +1,32 @@
+<button><a href={data} download={`${klasse.Klasse}.xlsx`}>Notenblatt für {klasse.Klasse} herunterladen</a></button>
+<script>
+  import XlsxPopulate from './xp.js'
+
+  let data, url
+  export let schueler, klasse, jahr, abschnitt
+  window.fetch('./Notenlisten.xlsx')
+    .then(res => res.blob())
+    .then(blob => XlsxPopulate.fromDataAsync(blob))
+    .then(workbook => {
+      const sheet = workbook.sheet(0)
+      sheet.cell('A3').value(`Klasse: ${klasse.Klasse}`)
+      sheet.cell('C3').value(`1. Halbjahr ${jahr}/${jahr-1999}`).style({ bold: true, fontSize: 12 })
+      sheet.cell('M3').value(`2. Halbjahr ${jahr}/${jahr-1999}`).style({ bold: true, fontSize: 12 })
+      schueler.forEach((s,i) => {
+        sheet.cell(`A${9+i}`).value(i+1)
+        sheet.cell(`B${9+i}`).value(`${s.Name},\n  ${s.Vorname}`).style({ fontSize: 9 })
+      })
+      // lösche die verbleibenden Zeilen
+      sheet._rows.splice(9 + schueler.length, 29 - schueler.length)
+      sheet._rows.map((row, index) => {
+        row._node.attributes.r = index
+      })
+      sheet.name(klasse.Klasse)
+      workbook.outputAsync("base64")
+        .then(base64 => {
+          data = "data:" + XlsxPopulate.MIME_TYPE + ";base64," + base64
+          console.log(data)
+        })
+    })
+    .catch(e => console.log(e))
+</script>

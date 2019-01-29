@@ -1,0 +1,74 @@
+<div  class="item"
+      on:pointermove={resizeMove}
+>
+  <slot></slot>
+</div>
+<div  class="resize"
+      on:pointermove={resizeMove}
+></div>
+
+<script>
+  export let scale = true
+  export let border = true
+  const resizeMove = (event) => {
+    var target = event.target,
+        x = (parseFloat(target.getAttribute('data-x')) || 0),
+        y = (parseFloat(target.getAttribute('data-y')) || 0);
+
+    // update the element's style
+    target.style.width  = event.rect.width + 'px';
+    target.style.height = event.rect.height + 'px';
+
+    // translate when resizing from top or left edges
+    x += event.deltaRect.left;
+    y += event.deltaRect.top;
+    console.log(event.deltaRect)
+
+    target.style.webkitTransform = target.style.transform =
+        'translate(' + x + 'px,' + y + 'px)';
+
+    target.setAttribute('data-x', x);
+    target.setAttribute('data-y', y);
+  }
+</script>
+
+<style>
+  .resize {
+    position: absolute;
+    bottom: 280px;
+    left: 280px;
+    border-radius: 50%;
+    height: 50px;
+    width: 50px
+  }
+
+  .resize:hover {
+    background: red;
+    opacity: 0.5;
+    cursor: sw-resize;
+  }
+
+  .item {
+    position: absolute;
+    bottom: 300px;
+    left: 300px;
+    width: 100px;
+    height: 100px;
+    min-width: 50px;
+    min-height: 50px;
+    border-radius: 7px;
+    user-select: none;
+    box-sizing: border-box;
+      -webkit-transform: translate(0px, 0px);
+          transform: translate(0px, 0px);
+  }
+
+  .item:active {
+    background: red;
+    opacity: 0.5;
+  }
+
+  .item:hover {
+    cursor: pointer;
+  }
+</style>
