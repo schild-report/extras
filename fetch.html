@@ -17,7 +17,7 @@
         sheet.cell(`B${9+i}`).value(`${s.Name},\n  ${s.Vorname}`).style({ fontSize: 9 })
       })
       // lösche die verbleibenden Zeilen
-      sheet._rows.splice(9 + schueler.length, 29 - schueler.length)
+      sheet._rows.splice(9 + schueler.length, 31 - schueler.length)
       sheet._rows.map((row, index) => {
         row._node.attributes.r = index
       })
