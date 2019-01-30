@@ -1,0 +1,1 @@
+git archive --prefix=bk2018/ -o ~/temp/archive.zip HEAD
