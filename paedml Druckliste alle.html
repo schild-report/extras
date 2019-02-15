@@ -1,4 +1,5 @@
-{#await gruppe then gruppeP}
+{#await gruppe}Warte auf Daten…
+{:then gruppeP}
   {#each Object.entries(_.groupBy(gruppeP, 'Klasse')) as [klasse, schueler]}
     {#each _.chunk(schueler, 10) as slice}
       <div class="page" orientation="portrait" size="A4">
@@ -23,6 +24,7 @@
       </div>
     {/each}
 {/each}
+{:catch error}Fehler
 {/await}
 
 <style>
@@ -39,7 +41,7 @@
   import Hashids from 'hashids'
   export let schueler, knexConfig, privat
   const _ = R('lodash')
-  const Schueler = R('models').Schueler
+  const Schueler = R('schild').Schueler
   Schueler.knex(R('knex')(knexConfig))
   const hashids = new Hashids(privat.salt, 8, 'abcdefghkmnpqrstuvwxyz23456789')
   const h = (id) => hashids.encode(id)

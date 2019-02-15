@@ -1,20 +1,21 @@
-{#await gruppe then gruppeP}
+{#await gruppe}Liste kommt…
+{:then gruppeP}
 <pre>
 {#each gruppeP as s}
   <br>b{s.ID},{s.Name},{s.Vorname},{s.Klasse.slice(0, -1)},{h(s.ID)}
 {/each}
 </pre>
+{:catch error}Fehler
 {/await}
 
 <script>
   import { beforeUpdate } from 'svelte'
   import Hashids from 'hashids'
   export let schueler, knexConfig, privat
-  const Schueler = R('models').Schueler
+  const Schueler = R('schild').Schueler
   Schueler.knex(R('knex')(knexConfig))
   const hashids = new Hashids(privat.salt, 8, 'abcdefghkmnpqrstuvwxyz23456789')
   const h = (id) => hashids.encode(id)
-  let gruppe
   $: gruppe = Schueler.query()
           .where('Status', '2')
           .andWhere('Geloescht', '-')

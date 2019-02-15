@@ -18,7 +18,7 @@
   }
 
   (async () => {
-    const Schueler = R('models').Schueler
+    const Schueler = R('schild').Schueler
     Schueler.knex(R('knex')(knexConfig))
     // alle Schüler aus der DB holen
     const alleSchueler = await Schueler.query()
