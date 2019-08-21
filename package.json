@@ -11,6 +11,7 @@
   "dependencies": {
     "hashids": "^1.2.2",
     "interactjs": "^1.3.4",
-    "svelte": "^3.0.0-alpha16"
+    "svelte": "^3.0.0-alpha16",
+    "xlsx-populate": "^1.19.1"
   }
 }

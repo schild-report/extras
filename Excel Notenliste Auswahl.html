@@ -4,11 +4,10 @@
 </style>
 <script>
   import XlsxPopulate from './xp.js'
-
   export let schueler, klasse, jahr, abschnitt
   let data
 
-  $: (async () => {
+  async function writer () {
     const res = await window.fetch('./Notenlisten.xlsx')
     const blob = await res.blob()
     const workbook = await XlsxPopulate.fromDataAsync(blob)
@@ -31,5 +30,6 @@
     sheets.forEach(s => { if (s.name().startsWith('Tabelle')) s.delete() })
     const base64 = await workbook.outputAsync("base64")
     data = "data:" + XlsxPopulate.MIME_TYPE + ";base64," + base64
-  })()
+  }
+  writer()
 </script>

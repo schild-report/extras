@@ -16,7 +16,7 @@
   Schueler.knex(R('knex')(knexConfig))
   const hashids = new Hashids(privat.salt, 8, 'abcdefghkmnpqrstuvwxyz23456789')
   const h = (id) => hashids.encode(id)
-  $: gruppe = Schueler.query()
+  const gruppe = Schueler.query()
           .where('Status', '2')
           .andWhere('Geloescht', '-')
           .andWhere('Gesperrt', '-')

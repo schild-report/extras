@@ -1,0 +1,142 @@
+<link href="https://fonts.googleapis.com/css?family=Overlock:900i" rel="stylesheet">
+<div class="container">
+    <div class="search">
+      <input bind:value={term} on:keydown={keydown} class="input" placeholder="Im Lexikon suchen">
+      <ul class="list">
+        {#each options as t,i}
+        <li
+        class={`item ${i+1 === pos ? 'active':''}`}
+        value={t.link}
+        on:click={() => select(t)}
+        >{t.value}</li>
+        {/each}
+      </ul>
+    </div>
+    <div class="logo big" href="#">Farhang.im</div>
+        <h4>Deutsch-persisches Lexikon </h4>
+          <div>Mit 30990 Einträgen und 74669 Übersetzungen ist <span class="logo">Farhang.im</span> eines der
+          größten deutsch-persischen Wörterbücher, die online verfügbar sind.
+          Dazu sind alle Einträge frei zugänglich und können beliebig
+          verwendet werden.</div>
+          <div dir="rtl">فرهنگ فارسی - آلمانی</div>
+          <div dir="rtl">لغات، اصطلاحات، ضرب المثلها</div>
+          <div dir="rtl">برای اضافه و اصلاح کردن ضرب المثلها اینجا کلیک کنید</div>
+      <h4>Ein zufälliger Eintrag aus <span class="logo">Farhang</span></h4>
+      <div class="card">
+        <dl><dt><a href="https://farhang.im/streife">Streife</a></dt>
+          <dd><span dir="ltr">Streife</span> <span dir="rtl">کَشیکچى</span></dd>
+          <dd><span dir="ltr">Polizeistreife</span> <span dir="rtl">پُلیس گَشت</span></dd>
+        </dl>
+      </div>
+      </div>
+<style>
+/* Grid
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+.container {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box; }
+/* For devices larger than 400px */
+@media (min-width: 400px) {
+  .container {
+    width: 85%;
+    padding: 0; }
+}
+
+/* For devices larger than 550px */
+@media (min-width: 550px) {
+  .container {
+    width: 80%; }
+}
+.card {
+    padding: 1rem 2rem;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+.card p:last-child {
+  margin: 0;
+}
+  .logo {
+  font-family: 'Overlock', cursive;
+  color: #333;
+  }
+  .big {
+    font-size: 2rem;
+    margin-top: 1rem;
+  }
+  .input {
+    height: 2rem;
+    font-size: 1.2rem;
+    width: 100%;
+  }
+.search {
+  width: 100%;
+  padding: 10px;
+  background-color: #dbdbdb;
+}
+.list {
+    padding: 0;
+    margin: 0.3rem 0 0.5rem 0rem;
+    border: 1px solid #dbdbdb;
+    overflow: auto;
+    background-color: white;
+    box-shadow: 2px 2px 24px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    z-index: 100;
+}
+.item {
+    list-style: none;
+    text-align: left;
+    padding: 0.25rem 2.7rem 0.7rem 1.25rem;
+    cursor: pointer;
+}
+.item.active,
+.item:hover {
+    background-color: #dbdbdb;
+  }
+</style>
+<script>
+  let term = ''
+  let options = []
+  let pos
+  let selected = {}
+  $: fetch_options(term)
+
+  function select (t) {
+    selected = t
+    term = ''
+    pos = 1
+  }
+  function fetch_options (term) {
+    term.length > 0
+      ? fetch(`https://farhang.im/search/autocomplete.json?term=${term}`)
+                 .then(res => res.text())
+                 .then(text => {options = JSON.parse(text); pos = 1})
+                 .catch(e => options = [])
+      : options = []
+  }
+  const keydown = (e) => {
+    switch (e.key) {
+          case 'ArrowDown':
+            e.preventDefault();
+            options.length > pos && (pos += 1)
+            break;
+          case 'ArrowUp':
+            e.preventDefault();
+            pos > 1 && (pos -=1)
+            break;
+          case 'Enter':
+            e.preventDefault();
+            select(options[pos-1])
+            break;
+          case 'Tab':
+            e.preventDefault();
+            options.length > 0 && (term = options[pos-1].value)
+            break;
+        }
+  }
+</script>

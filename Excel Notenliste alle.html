@@ -5,6 +5,8 @@
 <script>
   export let jahr, abschnitt, knexConfig
   let data
+  const mysql = R('mysql')
+  const connection = mysql.createConnection(knexConfig.connection)
   import XlsxPopulate from './xp.js'
 
   function groupBy (arr, id) {
@@ -18,16 +20,17 @@
   }
 
   (async () => {
-    const Schueler = R('schild').Schueler
-    Schueler.knex(R('knex')(knexConfig))
     // alle Schüler aus der DB holen
-    const alleSchueler = await Schueler.query()
-          .where('Status', '2')
-          .andWhere('Geloescht', '-')
-          .andWhere('Gesperrt', '-')
-          .select('ID', 'Name', 'Vorname', 'Klasse')
-          .orderBy('Klasse')
-          .orderBy('Name')
+    const connection = mysql.createConnection(knexConfig.connection)
+    connection.connect()
+    connection.query(`SELECT ID, Name, Vorname, Klasse
+                      FROM schueler
+                      WHERE Status = 2 AND Geloescht = "-" AND Gesperrt = "-"
+                      ORDER BY Klasse, Name ASC`,
+      (e, res) => {
+        alleSchueler = res
+      })
+    connection.end()
     const klassen = [...groupBy(alleSchueler, 'Klasse').entries()]
     // lade Vorlage mit genügend Tabellen. Tabellen können leider nicht dupliziert werden
     // und müssen min. soviele sein wie Klassen. Beachten!
@@ -36,6 +39,7 @@
     const workbook = await XlsxPopulate.fromDataAsync(blob)
     klassen.forEach(([klasse, schueler],i) => {
       const sheet = workbook.sheet(i)
+      sheet.column("B").width(23)
       sheet.cell('A3').value(`Klasse: ${klasse}`)
       sheet.cell('C3').value(`1. Halbjahr ${jahr}/${jahr-1999}`).style({ bold: true, fontSize: 12 })
       sheet.cell('M3').value(`2. Halbjahr ${jahr}/${jahr-1999}`).style({ bold: true, fontSize: 12 })
