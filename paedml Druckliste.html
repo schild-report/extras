@@ -35,7 +35,7 @@
   import Hashids from 'hashids'
   const mysql = R('mysql')
   export let schueler, knexConfig, privat, gruppe
-  const hashids = new Hashids('2019', 8, 'abcdefghkmnpqrstuvwxyz23456789')
+  const hashids = new Hashids(privat.hash_salt, 8, 'abcdefghkmnpqrstuvwxyz23456789')
   const h = (id) => hashids.encode(id)
   const mysql_connection = mysql.createConnection(knexConfig.connection)
   mysql_connection.connect()
