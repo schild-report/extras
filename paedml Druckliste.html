@@ -32,9 +32,20 @@
 </style>
 
 <script>
-  export let schueler
-  const _ = R('lodash')
   import Hashids from 'hashids'
-  const hashids = new Hashids('schild.report hashing salt', 8, 'abcdefghkmnpqrstuvwxyz23456789')
-  function h (id) { return hashids.encode(id) }
+  const mysql = R('mysql')
+  export let schueler, knexConfig, privat, gruppe
+  const hashids = new Hashids('2019', 8, 'abcdefghkmnpqrstuvwxyz23456789')
+  const h = (id) => hashids.encode(id)
+  const mysql_connection = mysql.createConnection(knexConfig.connection)
+  mysql_connection.connect()
+  mysql_connection.query(`SELECT ID, Name, Vorname, Klasse
+                          FROM schueler
+                          WHERE Status = 2 AND Geloescht = "-" AND Gesperrt = "-"
+                          ORDER BY Klasse, Name ASC`,
+    (e, res) => {
+      console.log(e)
+      gruppe = res
+    })
+  const _ = R('lodash')
 </script>

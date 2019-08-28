@@ -1,26 +1,25 @@
-{#await gruppe}Liste kommt…
-{:then gruppeP}
-<pre>
-{#each gruppeP as s}
-  <br>b{s.ID},{s.Name},{s.Vorname},{s.Klasse.slice(0, -1)},{h(s.ID)}
-{/each}
-</pre>
-{:catch error}Fehler
-{/await}
+{#if gruppe}
+  <pre>
+    {#each gruppe as s}
+      <br>b{s.ID},{s.Name},{s.Vorname},{s.Klasse.slice(0, -1)},{h(s.ID)}
+    {/each}
+  </pre>
+{/if}
 
 <script>
-  import { beforeUpdate } from 'svelte'
   import Hashids from 'hashids'
-  export let schueler, knexConfig, privat
-  const Schueler = R('schild').Schueler
-  Schueler.knex(R('knex')(knexConfig))
-  const hashids = new Hashids(privat.salt, 8, 'abcdefghkmnpqrstuvwxyz23456789')
+  const mysql = R('mysql')
+  export let schueler, knexConfig, privat, gruppe
+  const hashids = new Hashids('2019', 8, 'abcdefghkmnpqrstuvwxyz23456789')
   const h = (id) => hashids.encode(id)
-  const gruppe = Schueler.query()
-          .where('Status', '2')
-          .andWhere('Geloescht', '-')
-          .andWhere('Gesperrt', '-')
-          .select('ID', 'Name', 'Vorname', 'Klasse')
-          .orderBy('Klasse')
-          .orderBy('Name')
+  const mysql_connection = mysql.createConnection(knexConfig.connection)
+  mysql_connection.connect()
+  mysql_connection.query(`SELECT ID, Name, Vorname, Klasse
+                          FROM schueler
+                          WHERE Status = 2 AND Geloescht = "-" AND Gesperrt = "-"
+                          ORDER BY Klasse, Name ASC`,
+    (e, res) => {
+      console.log(e)
+      gruppe = res
+    })
 </script>
