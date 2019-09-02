@@ -1,8 +1,11 @@
 {#each schueler as s (s.ID)}
-{#each s.abschnitte.filter(aktJahr) as a (a.ID)}
+{#each s.vermerke as v}
+{JSON.stringify(v)}
+{/each}
+<!-- {#each s.abschnitte.filter(aktJahr) as a (a.ID)}
     <Voffset/>{a.Jahr}{a.lehrer && a.lehrer.Vorname}
     <!-- <Voffset/>{a.Jahr}{a.lehrer.Vorname} -->
-{/each}
+<!-- {/each} --> -->
 {/each}
 <script>
 import Voffset from './partials/Voffset.html'

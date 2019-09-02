@@ -1,0 +1,28 @@
+{#await gruppe then schueler}
+{#each schueler as s (s.ID)}
+
+<ul><li><b>{s.Name}, {s.Vorname}</b></li>
+{#each s.vermerke as v}
+<li>{v.Bemerkung}</li>
+{/each}
+</ul>
+{/each}
+{/await}
+
+<script>
+  import Voffset from './partials/Voffset.html'
+  const mysql = R('mysql')
+  export let knexConfig, privat, gruppe
+  const mysql_connection = mysql.createConnection(knexConfig.connection)
+  mysql_connection.connect()
+  mysql_connection.query(`SELECT ID, Name, Vorname, Klasse,
+                            schuelervermerke.*
+                          FROM schueler
+                          WHERE Status = 2 AND Geloescht = "-" AND Gesperrt = "-"
+                          LEFT JOIN schuelervermerke ON schueler.id = schuelervermerke.schueler_id
+                          ORDER BY Klasse, Name ASC`,
+    (e, res) => {
+      console.log(e)
+      gruppe = res
+    })
+</script>
