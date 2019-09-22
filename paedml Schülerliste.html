@@ -7,6 +7,6 @@
 <script>
   export let schueler
   import Hashids from 'hashids'
-  const hashids = new Hashids('schild.report hashing salt', 8, 'abcdefghkmnpqrstuvwxyz23456789')
+  const hashids = new Hashids('2019', 8, 'abcdefghkmnpqrstuvwxyz23456789')
   function h (id) { return hashids.encode(id) }
 </script>
