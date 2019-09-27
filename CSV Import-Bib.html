@@ -1,0 +1,12 @@
+{#each schueler as s}
+{#each s.abschnitte.filter(aktHalbjahr) as a}
+{#each a.noten as f}
+  <pre>{s.ID}|{s.Name}|{s.Vorname}|{a.Jahr}|{f.Fach_ID}|{f.fach.FachKrz}|{f.FachLehrer}</pre>
+{/each}
+{/each}
+{/each}
+
+<script>
+  export let schueler, jahr, abschnitt
+  const aktHalbjahr = (a) =>  a.Jahr === jahr && a.Abschnitt === abschnitt
+</script>
