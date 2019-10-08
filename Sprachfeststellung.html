@@ -1,6 +1,6 @@
 <ul>
 {#each vermerke as v}
-<li>{v.Vermerkart_ID}: {v.Bemerkung}</li>
+<li>{v.Name} {v.Vermerkart_ID}: {v.Bemerkung}</li>
 {/each}
 </ul>
 
@@ -12,17 +12,13 @@
   const mysql_connection = mysql.createConnection(knexConfig.connection)
   mysql_connection.connect()
   mysql_connection.query(`
-                          SELECT schuelervermerke.*
-                            FROM schuelervermerke ORDER BY Vermerkart_ID ASC`,
-                          // SELECT ID, Name, Vorname, Klasse,
-                          //   schuelervermerke.*
-                          // FROM schueler
-                          // WHERE Status = 2 AND Geloescht = "-" AND Gesperrt = "-"
-                          // LEFT JOIN schuelervermerke ON schueler.id = schuelervermerke.schueler_id
-                          // ORDER BY Klasse, Name ASC`,
+                          SELECT schuelervermerke.*, schueler.Name
+                          FROM schuelervermerke
+                          LEFT JOIN schueler ON (schueler.ID = schuelervermerke.Schueler_ID)
+                          ORDER BY Vermerkart_ID DESC
+                          `,
     (e, res) => {
       console.log(e)
-      console.log(res)
       vermerke = res
     })
 </script>
