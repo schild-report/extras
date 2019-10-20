@@ -1,12 +1,28 @@
-{#each schueler as s}
-{#each s.abschnitte.filter(aktHalbjahr) as a}
-{#each a.noten as f}
-  <pre>{s.ID}|{s.Name}|{s.Vorname}|{a.Jahr}|{f.Fach_ID}|{f.fach.FachKrz}|{f.FachLehrer}</pre>
-{/each}
-{/each}
-{/each}
+<pre>id|name|vorname|jahr|klasse|klassen_lehrer|kurs|kurs_lehrer</pre>
+{#if gruppe}
+  {#each gruppe as s}
+        <pre>{s.ID}|{s.Name}|{s.Vorname}|{s.Jahr}|{s.Klasse}|{s.Lehrer}|{s.FachKrz}|{s.FachLehrer}</pre>
+  {/each}
+{/if}
 
 <script>
-  export let schueler, jahr, abschnitt
   const aktHalbjahr = (a) =>  a.Jahr === jahr && a.Abschnitt === abschnitt
+  const mysql = R('mysql')
+  export let schueler, knexConfig, privat, gruppe, jahr, abschnitt
+  const mysql_connection = mysql.createConnection(knexConfig.connection)
+  mysql_connection.connect()
+  mysql_connection.query(`SELECT s.ID, s.Name, s.Vorname, s.Klasse, s.Lehrer,
+                                 a.Jahr,
+                                 f.FachLehrer,
+                                 ff.FachKrz
+                          FROM schueler AS s
+                          JOIN schuelerlernabschnittsdaten AS a ON (a.Schueler_ID = s.ID AND a.Jahr = s.AktSchuljahr)
+                          JOIN schuelerleistungsdaten AS f ON (f.Abschnitt_ID = a.ID)
+                          JOIN eigeneschule_faecher AS ff ON (ff.ID = f.Fach_ID)
+                          WHERE Status = 2 AND Geloescht = "-" AND Gesperrt = "-"
+                          ORDER BY Klasse, Name ASC`,
+    (e, res) => {
+      console.log(e)
+      gruppe = res
+    })
 </script>
