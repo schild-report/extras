@@ -1,7 +1,7 @@
-<pre>id|name|vorname|jahr|klasse|klassen_lehrer|kurs|kurs_lehrer</pre>
+<pre>id|name|vorname|jahr|klasse|kurs|kurs_lehrer</pre>
 {#if gruppe}
   {#each gruppe as s}
-        <pre>{s.ID}|{s.Name}|{s.Vorname}|{s.Jahr}|{s.Klasse}|{s.Lehrer}|{s.FachKrz}|{s.FachLehrer}</pre>
+        <pre>{s.ID}|{s.Name}|{s.Vorname}|{s.Jahr}|{s.Klasse}|{s.FachKrz}|{s.FachLehrer}</pre>
   {/each}
 {/if}
 
@@ -11,7 +11,7 @@
   export let schueler, knexConfig, privat, gruppe, jahr, abschnitt
   const mysql_connection = mysql.createConnection(knexConfig.connection)
   mysql_connection.connect()
-  mysql_connection.query(`SELECT s.ID, s.Name, s.Vorname, s.Klasse, s.Lehrer,
+  mysql_connection.query(`SELECT s.ID, s.Name, s.Vorname, s.Klasse,
                                  a.Jahr,
                                  f.FachLehrer,
                                  ff.FachKrz
