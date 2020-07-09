@@ -1,25 +1,21 @@
-<button><a href={data} download={`Notenblaetter_${jahr}_${jahr-1999}.xlsx`}>Notenblätter für {`${jahr}/${jahr-1999}`} herunterladen</a></button>
+{#await init()}
+  Warten auf Schülerdaten…
+{:then weiter}
+  <button><a href={data} download={`Notenblaetter_${jahr}_${jahr-1999}.xlsx`}>Notenblätter für {`${jahr}/${jahr-1999}`} herunterladen</a></button>
+{:catch e}{e}
+{/await}
 <style>
   button { margin:auto; display:block; margin: 100px; font-size: 4rem; }
 </style>
 <script>
   export let jahr, abschnitt, knexConfig
-  let data
+  let data, alleSchueler
   const mysql = R('mysql')
   const connection = mysql.createConnection(knexConfig.connection)
   import XlsxPopulate from './xp.js'
+  import { groupBy } from './helfer.js'
 
-  function groupBy (arr, id) {
-    return arr.reduce(
-      (entryMap, f) => {
-        const fx = id.split('.').reduce((p,c)=>p&&p[c]||null, f)
-        return entryMap.set(fx, [...entryMap.get(fx)||[], f])
-      },
-      new Map()
-    )
-  }
-
-  (async () => {
+  async function init () {
     // alle Schüler aus der DB holen
     const connection = mysql.createConnection(knexConfig.connection)
     connection.connect()
@@ -27,15 +23,16 @@
                       FROM schueler
                       WHERE Status = 2 AND Geloescht = "-" AND Gesperrt = "-"
                       ORDER BY Klasse, Name ASC`,
-      (e, res) => {
+      async (e, res) => {
+        if (e) console.log(e)
         alleSchueler = res
-      })
     connection.end()
     const klassen = [...groupBy(alleSchueler, 'Klasse').entries()]
+    console.log('HIER')
     // lade Vorlage mit genügend Tabellen. Tabellen können leider nicht dupliziert werden
     // und müssen min. soviele sein wie Klassen. Beachten!
-    const res = await window.fetch('./Notenlisten.xlsx')
-    const blob = await res.blob()
+    const res2 = await window.fetch('./Notenlisten.xlsx')
+    const blob = await res2.blob()
     const workbook = await XlsxPopulate.fromDataAsync(blob)
     klassen.forEach(([klasse, schueler],i) => {
       const sheet = workbook.sheet(i)
@@ -60,5 +57,5 @@
     // als dataurl im Button hinterlegen
     const base64 = await workbook.outputAsync("base64")
     data = "data:" + XlsxPopulate.MIME_TYPE + ";base64," + base64
-  })()
+  })}
 </script>

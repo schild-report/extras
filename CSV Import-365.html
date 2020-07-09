@@ -6,7 +6,7 @@
   mysql_connection.connect();
   mysql_connection.query(
     `
-  SELECT s.ID, s.Name, s.Vorname, a.Jahr, s.Klasse, ff.FachKrz, f.FachLehrer
+  SELECT s.ID, s.Name, s.Vorname, a.jahr, s.Klasse, ff.FachKrz, f.FachLehrer
   FROM schueler AS s
   JOIN schuelerlernabschnittsdaten AS a ON (a.Schueler_ID = s.ID AND a.Jahr = s.AktSchuljahr)
   JOIN schuelerleistungsdaten AS f ON (f.Abschnitt_ID = a.ID)
@@ -20,11 +20,11 @@
   );
 </script>
 
-<pre>
-id|name|vorname|jahr|klasse|kurs|kurs_lehrer
+<pre>id|name|vorname|jahr|klasse|kurs|kurs_lehrer</pre>
 {#if gruppe}
-{#each gruppe as s}
-{s.ID}|{s.Name}|{s.Vorname}|{s.Jahr}|{s.Klasse}|{s.FachKrz}|{s.FachLehrer}<br>
-{/each}
+  {#each gruppe as s}
+    <pre>
+      {s.ID}|{s.Name}|{s.Vorname}|{s.Jahr}|{s.Klasse}|{s.FachKrz}|{s.FachLehrer}
+    </pre>
+  {/each}
 {/if}
-</pre>
