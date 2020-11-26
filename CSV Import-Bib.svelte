@@ -1,7 +1,7 @@
 <script>
-  const aktHalbjahr = a => a.Jahr === jahr && a.Abschnitt === abschnitt;
   const mysql = R("mysql");
-  export let schueler, knexConfig, privat, gruppe, jahr, abschnitt;
+  export let knexConfig
+  let gruppe
   const mysql_connection = mysql.createConnection(knexConfig.connection);
   mysql_connection.connect();
   mysql_connection.query(

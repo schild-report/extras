@@ -5,7 +5,7 @@
 </ul>
 
 <script>
-  import Voffset from './partials/Voffset.html'
+  import Voffset from './partials/Voffset.svelte'
   const mysql = R('mysql')
   export let knexConfig, privat
   let vermerke = []
