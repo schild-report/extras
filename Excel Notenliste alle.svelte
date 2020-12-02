@@ -12,8 +12,8 @@
   let data, alleSchueler
   const mysql = R('mysql')
   const connection = mysql.createConnection(knexConfig.connection)
-  import XlsxPopulate from './xp.js'
-  import { groupBy } from './helfer.js'
+  import XlsxPopulate from 'xp'
+  import { groupBy } from 'helfer.js'
 
   async function init () {
     // alle Schüler aus der DB holen

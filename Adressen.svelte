@@ -7,6 +7,6 @@
 {/each}
 
 <script>
-  import {datum} from './helfer'
+  import {datum} from 'helfer'
   export let schueler
 </script>
