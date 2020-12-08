@@ -1,6 +1,7 @@
 <script>
   import Papa from "papaparse";
   const _ = R("lodash");
+  export let privat
   let vouchers = "",
     values;
 
@@ -33,7 +34,7 @@
         {#each slice as s}
           <div style="padding: 0 10px 0 10px;">
             Dieser Voucher ermöglicht einen achtstündigen Zugang zum WLAN-Netz
-            BKB-BYOD am Berufskolleg Bethel. Geben Sie die u.a. Zugangsdaten
+            {privat.wlan} am {privat.schulname}. Geben Sie die u.a. Zugangsdaten
             beim Anmeldebildschirm ein.
           </div>
           <div>

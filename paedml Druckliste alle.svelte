@@ -22,7 +22,7 @@
                 </tr>
               </table>
             <div style="padding: 0 30px 0 30px;">
-              Zugang zu ihrer persönlichen BK-Seite haben Sie unter <b>mein.bk-bethel.de</b>
+            Zugang zu ihrer persönlichen BK-Seite haben Sie unter <b>{privat.meinbk}</b>
             </div>
             </div>
             <hr>
