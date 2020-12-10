@@ -46,7 +46,7 @@
 <script>
   import Hashids from 'hashids'
   const mysql = R('mysql')
-  export let schueler, knexConfig, privat, gruppe
+  export let knexConfig, privat, gruppe
   if (!privat.paedml_salt) throw 'Kein Salt'
   const hashids = new Hashids(privat.paedml_salt, 8, 'abcdefghkmnpqrstuvwxyz23456789')
   const h = (id) => hashids.encode(id)
