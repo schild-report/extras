@@ -1,13 +1,14 @@
 {#if gruppe}
   <pre>
     {#each gruppe as s}
-      <br>b{s.ID},{s.Name},{s.Vorname},{s.Klasse.slice(0, -1)},{h(s.ID)}
+      <br>b{s.ID},{s.Name},{s.Vorname},{s.Klasse.slice(0, -1)},{h(s.ID)},{datum(s.Geburtsdatum)}
     {/each}
   </pre>
 {/if}
 
 <script>
   import Hashids from 'hashids'
+  import {datum} from './helfer'
   const mysql = R('mysql')
   export let knexConfig, privat, gruppe
   if (!privat.paedml_salt) throw 'Kein Salt'
@@ -15,7 +16,7 @@
   const h = (id) => hashids.encode(id)
   const mysql_connection = mysql.createConnection(knexConfig.connection)
   mysql_connection.connect()
-  mysql_connection.query(`SELECT ID, Name, Vorname, Klasse
+  mysql_connection.query(`SELECT ID, Name, Vorname, Klasse, Geburtsdatum
                           FROM schueler
                           WHERE Status = 2 AND Geloescht = "-" AND Gesperrt = "-"
                           ORDER BY Klasse, Name ASC`,
