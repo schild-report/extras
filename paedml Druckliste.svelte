@@ -1,52 +1,24 @@
-{#each _.chunk(schueler, 10) as slice}
-  <div class="page" orientation="portrait" size="A4">
-    <div class="grid">
-      <b style="padding: 5px 0 0 5px">{slice[0].Klasse}</b>
-      {#each slice as s}
-        <div>
-          <table style="width: 100%; margin-bottom: 15px; margin-left: 30px">
-            <tr>
-              <td style="width: 50%"><b>{s.Name}, {s.Vorname}</b></td>
-              <td>Ihr Benutzername: b{s.ID}</td>
-            </tr>
-            <tr>
-              <td></td>
-              <td>Ihr Passwort: {h(s.ID)}</td>
-            </tr>
-          </table>
-        </div>
-        <hr>
-      {/each}
-    </div>
-  </div>
-{/each}
+<pre class="big">
+Hallo {schueler[0].Vorname},
 
-<style>
-  @import 'css/main.css';
-  .page {padding: 0;}
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    grid-gap: 20px;
-}
-</style>
+Ihr Benutzername: b{schueler[0].ID}
+Ihr Passwort: {h(schueler[0].ID)}
 
+Verwenden Sie für Ihren persönlichen Zugang {privat.meinbk}
+
+Grüße
+</pre>
 <script>
   import Hashids from 'hashids'
-  const mysql = R('mysql')
-  export let schueler, knexConfig, privat, gruppe
+  export let schueler, privat
   if (!privat.paedml_salt) throw 'Kein Salt'
   const hashids = new Hashids(privat.paedml_salt, 8, 'abcdefghkmnpqrstuvwxyz23456789')
   const h = (id) => hashids.encode(id)
-  const mysql_connection = mysql.createConnection(knexConfig.connection)
-  mysql_connection.connect()
-  mysql_connection.query(`SELECT ID, Name, Vorname, Klasse
-                          FROM schueler
-                          WHERE Status = 2 AND Geloescht = "-" AND Gesperrt = "-"
-                          ORDER BY Klasse, Name ASC`,
-    (e, res) => {
-      console.log(e)
-      gruppe = res
-    })
-  const _ = R('lodash')
 </script>
+<style>
+  .big {
+    font-style:unset;
+    font-size: 2rem;
+    margin: 5rem;
+  }
+</style>
