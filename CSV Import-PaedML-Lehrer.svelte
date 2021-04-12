@@ -15,7 +15,7 @@
 
 <pre>
 {#each gruppe as s}
-{s.Kuerzel},{s.Nachname},{s.Vorname},{s.Email}<br>
+{s.Kuerzel.toLowerCase()},{s.Nachname},{s.Vorname},{s.Email}<br>
 {:else}kommt...
 {/each}
 </pre>
