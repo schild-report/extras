@@ -5,9 +5,8 @@
 </ul>
 
 <script>
-  import Voffset from './partials/Voffset.svelte'
   const mysql = R('mysql')
-  export let knexConfig, privat
+  export let knexConfig
   let vermerke = []
   const mysql_connection = mysql.createConnection(knexConfig.connection)
   mysql_connection.connect()
