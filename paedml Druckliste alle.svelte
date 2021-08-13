@@ -1,19 +1,14 @@
 {#if gruppe}
   {#each Object.entries(_.groupBy(gruppe, 'Klasse')) as [klasse, schueler]}
     {#each _.chunk(schueler, 6) as slice}
-      <div class="page" orientation="portrait" size="A4" style="font-family: sans">
+      <div class="page" orientation="portrait" size="A4" style="font-family: sans; font-size: .98rem">
         <div class="grid">
           <b style="padding: 5px 0 0 5px">{klasse}</b>
           {#each slice as s}
-            <div style="padding: 0 30px 0 30px;">
-              Bitte beachten Sie, mit der Verwendung der Zugangsdaten
-              bestätigen Sie, dass sie die Sie die Nutzungsordnung für das
-              pädagogische Netz gelesen und zugestimmt haben.
-            </div>
             <div>
-              <table style="width: 100%; margin-bottom: 10px; margin-left: 30px">
+              <table style="width: 80%; margin-bottom: 8px; margin-left: 30px">
                 <tr>
-                  <td style="width: 50%"><b>{s.Name}, {s.Vorname}</b></td>
+                  <td style="width: 30%"><b>{s.Name}, {s.Vorname}</b></td>
                   <td>Ihr Benutzername: b{s.ID}</td>
                 </tr>
                 <tr>
@@ -22,7 +17,12 @@
                 </tr>
               </table>
             <div style="padding: 0 30px 0 30px;">
-            Zugang zu ihrer persönlichen BK-Seite haben Sie unter <b>{privat.meinbk}</b>
+              <b>Zugangsdaten zum Pädagogischen Netz des {privat.schulname} für das Schuljahr 2021/22</b>
+              <br>Bitte beachten Sie, mit der Verwendung der Zugangsdaten
+              bestätigen Sie, dass sie die Sie die Nutzungsordnung für das
+              pädagogische Netz gelesen und zugestimmt haben.
+            Zugang zu ihrer persönlichen BK-Seite haben Sie unter <b>{privat.meinbk}</b>.
+            Hier bekommen Sie auch einen persönlichen WLAN-Zugang. Heben Sie diesen Zettel das ganze Schuljahr über gut auf und machen Sie zur Sicherheit ein Foto davon.
             </div>
             </div>
             <hr>
