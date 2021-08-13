@@ -1,14 +1,41 @@
 {#if gruppe}
   <pre>
+    ID,Nachname,Vornamen,Klasse,Passwort,Geburtstag
     {#each gruppe as s}
-      <br>b{s.ID},{s.Name},{s.Vorname},{s.Klasse.slice(0, -1)},{h(s.ID)},{datum(s.Geburtsdatum)}
+      <br>b{s.ID},{s.Name},{s.Vorname},{s.Klasse.slice(0, -1)},{h(s.ID)},{new Date(s.Geburtsdatum).toJSON().slice(0,10)}
     {/each}
   </pre>
 {/if}
 
+<!--
+Für diese Einstellung der Importfunktion in /var/lib/ucs-school-import/configs/user_import.json
+Siehe auch https://docs.software-univention.de/ucsschool-import-handbuch-4.4.html
+{
+  "csv": {
+          "mapping": {
+                  "ID": "record_uid",
+                  "Vornamen": "firstname",
+                  "Nachname": "lastname",
+                  "Klasse": "school_classes",
+                  "Geburtstag": "birthday",
+                  "Passwort": "password"
+          }
+  },
+"scheme": {
+  "username": {
+      "student": "<record_uid>",
+      "teacher": "<record_uid><:lower>"
+  },
+  "email": "<username><maildomain>"
+  },
+  "maildomain": "@bkbethel.de",
+  "school": "schule",
+  "password_length": 8
+}
+-->
+
 <script>
   import Hashids from 'hashids'
-  import {datum} from './helfer'
   const mysql = R('mysql')
   export let knexConfig, privat, gruppe
   if (!privat.paedml_salt) throw 'Kein Salt'
