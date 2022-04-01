@@ -1,5 +1,5 @@
 {#each schueler as s}
-  <pre>{s.Name},{s.Vorname}</pre>
+  <pre>{s.Name},{s.Vorname},{s.EMail}</pre>
   <!-- <pre>{s.Name}, {s.Vorname}: {note(s)}</pre> -->
 {/each}
 
