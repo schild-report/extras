@@ -6,7 +6,7 @@
   mysql_connection.connect();
   mysql_connection.query(
     `
-  SELECT s.ID, s.Name, s.Vorname, SUBSTRING(s.Klasse, 1, 4) AS Klasse, CASE s.Geschlecht WHEN 3 THEN 'm' ELSE 'w' END
+  SELECT s.ID, s.Name, s.Vorname, SUBSTRING(s.Klasse, 1, 4) AS Klasse, CASE s.Geschlecht WHEN 3 THEN 'm' ELSE 'w' END, DATE_FORMAT(Geburtsdatum, "%d.%m.%Y")
   FROM schueler AS s
   WHERE Status = 2 AND Geloescht = "-" AND Gesperrt = "-"
   ORDER BY Klasse, Name ASC`,
