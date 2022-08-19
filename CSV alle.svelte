@@ -1,7 +1,7 @@
 {#if gruppe}
   <pre>
     {#each gruppe as s}
-      <br>{s.Name},{s.Vorname},{s.Klasse.slice(0, -1)}
+      <br>{s.Name},{s.Vorname},{s.Klasse.slice(0, -1)},{s.EMail}
     {/each}
   </pre>
 {/if}

@@ -8,8 +8,8 @@
             <div>
               <table style="width: 80%; margin-bottom: 8px; margin-left: 30px">
                 <tr>
-                  <td style="width: 30%"><b>{s.Name}, {s.Vorname}</b></td>
-                  <td>Ihr Benutzername: b{s.ID}</td>
+                  <td style="width: 60%"><b>{s.Name}, {s.Vorname}</b></td>
+                  <td>Ihr Benutzername: k{s.ID}</td>
                 </tr>
                 <tr>
                   <td></td>
@@ -50,6 +50,7 @@
   if (!privat.paedml_salt) throw 'Kein Salt'
   const hashids = new Hashids(privat.paedml_salt, 8, 'abcdefghkmnpqrstuvwxyz23456789')
   const h = (id) => hashids.encode(id)
+  knexConfig.connection.database="schild_kbk"
   const mysql_connection = mysql.createConnection(knexConfig.connection)
   mysql_connection.connect()
   mysql_connection.query(`SELECT ID, Name, Vorname, Klasse
