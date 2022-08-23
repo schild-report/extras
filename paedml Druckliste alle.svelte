@@ -8,8 +8,8 @@
             <div>
               <table style="width: 80%; margin-bottom: 8px; margin-left: 30px">
                 <tr>
-                  <td style="width: 30%"><b>{s.Name}, {s.Vorname}</b></td>
-                  <td>Ihr Benutzername: b{s.ID}</td>
+                  <td style="width: 60%"><b>{s.Name}, {s.Vorname}</b></td>
+                  <td>Ihr Benutzername: {String(s.SchulnrEigner) === String(privat.schulnummer) ? "b":"k"}{s.ID}</td>
                 </tr>
                 <tr>
                   <td></td>
@@ -46,19 +46,23 @@
 <script>
   import Hashids from 'hashids'
   const mysql = R('mysql')
-  export let knexConfig, privat, gruppe
+  export let knexConfig, privat
+  let gruppe = [], regel, foerder
   if (!privat.paedml_salt) throw 'Kein Salt'
+  if (!privat.schulnummer || !privat.paedml_salt || !privat.schulname || !privat.meinbk) throw "Daten privat fehlen"
   const hashids = new Hashids(privat.paedml_salt, 8, 'abcdefghkmnpqrstuvwxyz23456789')
   const h = (id) => hashids.encode(id)
-  const mysql_connection = mysql.createConnection(knexConfig.connection)
-  mysql_connection.connect()
-  mysql_connection.query(`SELECT ID, Name, Vorname, Klasse
-                          FROM schueler
-                          WHERE Status = 2 AND Geloescht = "-" AND Gesperrt = "-"
-                          ORDER BY Klasse, Name ASC`,
-    (e, res) => {
-      console.log(e)
-      gruppe = res
-    })
+  const mysql_connection = mysql.createConnection(knexConfig.connection);
+knexConfig.connection.database="schild_kbk"
+const mysql_connection2 = mysql.createConnection(knexConfig.connection);
+mysql_connection.connect();
+mysql_connection2.connect();
+const query = `SELECT ID, Name, Vorname, Klasse, Geburtsdatum, SchulnrEigner
+                        FROM schueler
+                        WHERE Status = 2 AND Geloescht = "-" AND Gesperrt = "-"
+                        ORDER BY Klasse, Name ASC`
+mysql_connection.query(query, (e,res)=> e ? console.log(e, "reg"): (regel=res))
+mysql_connection2.query(query, (e,res)=> e ? console.log(e, "förder"): (foerder=res))
+$: if (regel && foerder) gruppe = gruppe.concat(regel, foerder)
   const _ = R('lodash')
 </script>
