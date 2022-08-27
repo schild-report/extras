@@ -9,11 +9,11 @@
               <table style="width: 80%; margin-bottom: 8px; margin-left: 30px">
                 <tr>
                   <td style="width: 60%"><b>{s.Name}, {s.Vorname}</b></td>
-                  <td>Ihr Benutzername: {String(s.SchulnrEigner) === String(privat.schulnummer) ? "b":"k"}{s.ID}</td>
+                  <td>Ihr Benutzername: <code> {String(s.SchulnrEigner) === String(privat.schulnummer) ? "b":"k"}{s.ID}</code></td>
                 </tr>
                 <tr>
                   <td></td>
-                  <td>Ihr Passwort: {h(s.ID)}</td>
+                  <td>Ihr Passwort: <code>{h(s.ID)}</code></td>
                 </tr>
               </table>
             <div style="padding: 0 30px 0 30px;">

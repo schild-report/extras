@@ -53,7 +53,6 @@ Siehe auch https://docs.software-univention.de/ucsschool-import-handbuch-4.4.htm
   mysql_connection2.query(query, (e,res)=> e ? console.log(e, "förder"): (foerder=res))
 </script>
 {#if regel}
-<pre>
-ID,Nachname,Vornamen,Klasse,Passwort,Geburtstag,Email
+<pre>ID,Nachname,Vornamen,Klasse,Passwort,Geburtstag,Email
 {#each regel as s}b{s.ID},{s.Name},{s.Vorname},{klasse(s.Klasse)},{h( s.ID)},{new Date(s.Geburtsdatum).toJSON().slice(0, 10)},{slugify(s.Vorname)}.{slugify(s.Name)}@fvb-berufskolleg.de<br>{/each}{#each foerder as s}k{s.ID},{s.Name},{s.Vorname},{klasse(s.Klasse)},{h( s.ID)},{new Date(s.Geburtsdatum).toJSON().slice(0, 10)},{slugify(s.Vorname)}.{slugify(s.Name)}@fvb-berufskolleg.de<br>{/each}</pre>
 {/if}
