@@ -22,7 +22,7 @@
                             f.Bezeichnung
                           FROM schueler s
                           JOIN eigeneschule_fachklassen f ON Fachklasse_ID=f.ID 
-                          WHERE s.Status = 2 AND s.Geloescht = "-" AND s.Gesperrt = "-"
+                          WHERE (s.Status = 2 OR s.Status = 6) AND s.Geloescht = "-" AND s.Gesperrt = "-"
                           ORDER BY Klasse, Name ASC`
   mysql_connection.query(query, (e,res)=> e ? console.log(e, "reg"): (regel=res))
   mysql_connection2.query(query, (e,res)=> e ? console.log(e, "förder"): (foerder=res))
@@ -31,7 +31,7 @@
     console.log(s.Schulnummer, privat.schulnummer)
     const prefix = s.Schulnummer === Number(privat.schulnummer) ? 'b':'k'
     const id = prefix + s.ID
-    const klasse = s.Anlage === 'A' ? s.Bezeichnung:s.Klasse.slice(0,-1)
+    const klasse = s.Anlage === 'A' ? s.Bezeichnung.replace(/[\(|\)]/g,'') : s.Klasse.slice(0,-1)
     const password = h(s.ID) //fix TODO
     const geburtsdatum = new Date(s.Geburtsdatum).toJSON().slice(0, 10)
     const mail = `${slugify(s.Vorname)}.${slugify(s.Name)}@fvb-berufskolleg.de`
