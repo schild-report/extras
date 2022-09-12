@@ -1,6 +1,5 @@
 <script>
   const mysql = R("mysql");
-  import AllgKonferenzliste from "../bk2018/Allg Konferenzliste.svelte";
   import { groupBy } from "./helfer";
   export let knexConfig, privat;
   let regel, foerder;
@@ -39,11 +38,15 @@
       size="A4"
       style="font-family: sans; font-size: .8rem"
     >
-      <div style="padding: 1in">
-				<h5>Anlage {anlage === "A"?"A":"B-E"}</h5>
-        {#each [...groupBy(schueler, "Klasse").entries()].sort((a,b)=>a.Klasse > b.Klasse ? -1: 1) as [klasse, schueler]}
-          {klasse} ({schueler[0].Lehrer}): {schueler.length}<br />
-        {/each}
+      <div style="padding: .3in 1in">
+				<b>Anlage {anlage === "A"?"A":"B-E"}</b>
+				<table border="1" style="border-collapse: collapse; width: 30%">
+						{#each [...groupBy(schueler, "Klasse").entries()].sort((a,b)=>a.Klasse > b.Klasse ? -1: 1) as [klasse, schueler], i}
+						<tr>
+							<td>{i+1}</td><td>{klasse}</td><td>{schueler[0].Lehrer}</td><td>{schueler.length}</td>
+						</tr>
+						{/each}
+					</table>
       </div>
     </div>
   {/each}
