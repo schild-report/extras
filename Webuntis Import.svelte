@@ -17,10 +17,4 @@
   );
 </script>
 
-<pre>
-{#if gruppe}
-{#each gruppe as s}
-  {Object.values(s).join(',')}<br>
-{/each}
-{/if}
-</pre>
+<pre>{#if gruppe}{#each gruppe as s}{Object.values(s).join(',')}<br>{/each}{/if}</pre>
