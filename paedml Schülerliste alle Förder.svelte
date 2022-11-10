@@ -31,7 +31,7 @@
   const create_row = s => {
     const prefix = s.Schulnummer === Number(privat.schulnummer) ? 'b':'k'
     const id = prefix + s.ID
-    const klasse = s.Anlage === 'A' ? s.Bezeichnung.replace(/[\(\)]/g,'') : s.Klasse.slice(0,-1)
+    const klasse = s.Anlage === 'A' ? s.Bezeichnung.replace(/[\(\)]/g,'').replace(' ', '_') : s.Klasse.slice(0,-1)
     const password = h(s.ID) //fix TODO
     const geburtsdatum = new Date(s.Geburtsdatum).toJSON().slice(0, 10)
     const mail = `${slugify(s.Vorname)}.${slugify(s.Name)}@${privat.domain}`
