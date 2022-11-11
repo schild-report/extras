@@ -19,7 +19,7 @@
   .grid {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
-    grid-gap: 20px;
+    grid-gap: 10px;
   }
 </style>
 
@@ -33,12 +33,10 @@
       <div class="grid">
         {#each slice as s}
           <div style="padding: 0 10px 0 10px;">
-            Dieser Voucher ermöglicht einen achtstündigen Zugang zum WLAN-Netz
-            {privat.wlan} am {privat.schulname}. Geben Sie die u.a. Zugangsdaten
-            beim Anmeldebildschirm ein.
-          </div>
-          <div>
-            <center><b>{s}</b></center>
+            <b>Zugangscode für {privat.wlan} des {privat.schulname}</b><br>
+            Verbinden Sie sich mit dem WLAN und geben Sie den Zugangscode beim Anmeldebildschirm ein. Der Zugang ist für acht Stunden ab der ersten Eingabe gültig.
+
+            <center><b style="font-size: xx-large; font-family: monospace;">{s}</b></center>
           </div>
           <hr />
         {/each}
