@@ -9,15 +9,15 @@
               <table style="width: 80%; margin-bottom: 8px; margin-left: 30px">
                 <tr>
                   <td style="width: 60%"><b>{s.Name}, {s.Vorname}</b></td>
-                  <td>Ihr Benutzername: <code> {String(s.SchulnrEigner) === String(privat.schulnummer) ? "b":"k"}{s.ID}</code></td>
+                  <td>Ihr Benutzername: <code> {prefix(s)}{s.ID}</code></td>
                 </tr>
                 <tr>
                   <td></td>
-                  <td>Ihr Passwort: <code>{h(s.ID)}</code></td>
+                  <td>Ihr Passwort: <code>{h((prefix(s) === 'b' ? 1:2) + s.ID)}</code></td>
                 </tr>
               </table>
             <div style="padding: 0 30px 0 30px;">
-              <b>Zugangsdaten zum Pädagogischen Netz des {privat.schulname} für das Schuljahr 2022/23</b>
+              <b>Zugangsdaten zum Pädagogischen Netz des {privat.schulname} für das Schuljahr 2022/23, 2. Halbjahr</b>
               <br>Bitte beachten Sie, mit der Verwendung der Zugangsdaten
               bestätigen Sie, dass sie die Sie die Nutzungsordnung für das
               pädagogische Netz gelesen und zugestimmt haben.
@@ -52,6 +52,7 @@
   if (!privat.schulnummer || !privat.paedml_salt || !privat.schulname || !privat.meinbk) throw "Daten privat fehlen"
   const hashids = new Hashids(privat.paedml_salt, 8, 'abcdefghkmnpqrstuvwxyz23456789')
   const h = (id) => hashids.encode(id)
+  const prefix = (s) => String(s.SchulnrEigner) === String(privat.schulnummer) ? "b":"k"
   const mysql_connection = mysql.createConnection(knexConfig.connection);
 knexConfig.connection.database="schild_kbk"
 const mysql_connection2 = mysql.createConnection(knexConfig.connection);
