@@ -1,5 +1,4 @@
 @charset "UTF-8";
-@import url(normalize.css);
 @font-face {
   font-family: 'TeX Gyre Heros';
   src: url("../daten/texgyreheros-regular-webfont.woff") format("woff");
@@ -11,7 +10,7 @@
   font-style: normal;
   font-weight: bold;
 }
-@font-face {
+/* @font-face {
   font-family: 'TeX Gyre Heros';
   src: url("../daten/texgyreheros-italic-webfont.woff") format("woff");
   font-style: italic;
@@ -21,12 +20,17 @@
   src: url("../daten/texgyreheros-bolditalic-webfont.woff") format("woff");
   font-style: italic;
   font-weight: bold;
-}
+} */
 
 @media screen {
+  body {
+    background: lightgoldenrodyellow;
+  }
   .page {
-    border: 1px solid black;
-    box-shadow: 5px 5px 4px 0 silver;
+    box-sizing: border-box;
+    background: rgba(255,255,255);
+    margin: 20px;
+    box-shadow: 0px 0px 30px 0px #888;
   }
 }
 
@@ -34,103 +38,97 @@
   * {
     -webkit-print-color-adjust: exact;
   }
-
   .page {
     page-break-after: always;
     page-break-inside: avoid;
     margin: 0;
   }
-}
-
-@page {
-  margin: 0;
-  size: auto;
+  .no-print, .no-print * {
+    display: none !important;
+  }
 }
 
 html {
+  box-sizing: border-box;
   font-size: 10pt;
 }
-
+*,
+::after,
+::before {
+  box-sizing: inherit;
+}
+body {
+  margin: 0;
+}
 .page {
   line-height: 1.5;
   font-weight: normal;
   font-family: "Tex Gyre Heros";
-  color: #333;
+  color: #191919;
   position: relative;
-  padding: 10mm 25mm 10mm 25mm;
+  padding: 5mm 25mm 10mm 25mm;
   display: block;
 }
 
-/*
-Da *named pages*, also z.B. @page a3landscape noch nicht von Chrome
-unterstützt werden, gilt vorerst die Standard-Einstellung von A4 Portrait.
-Um andere Formate zu erzeugen, muss die Größe in den svelte-Koponenten
-als setup-Einstellung hinterlegt werden. Oder man verwendet ein besonderes CSS
-mit der anderen Einstellung.
-Dazu bitte ein @import 'nicht_a4_portrait.css' verwenden. Svelte ignoriert sonst
-die in den <style> tags hinterlegten @... Anweisungen.
-Link: https://www.w3.org/TR/css3-page/#using-named-pages
-*/
+/* Dieses Stylesheet funktioniert nur mit Chrom*-Browsern ab M85, die named pages aktiviert haben. */
+
+@page {
+  margin: 0;
+}
 
 .page[size="A4"][orientation="portrait"] {
-  /* page: a4portrait; */
+  page: a4portrait;
   width: 210mm;
   height: 296.8mm;
 }
-/* @page a4portrait {
-  margin: 0;
+@page a4portrait {
   size: A4 portrait;
-} */
+}
 
 .page[size="A4"][orientation="landscape"] {
-  /* page: a4landscape; */
+  page: a4landscape;
   width: 296.8mm;
   height: 209mm;
 }
-/* @page a4landscape {
-  margin: 0;
+@page a4landscape {
   size: A4 landscape;
-} */
+}
 
 .page[size="A3"][orientation="portrait"] {
-  /* page: a3portrait; */
+  page: a3portrait;
   width: 296.8mm;
   height: 420mm;
 }
-/* @page a3portrait {
-  margin: 0;
+@page a3portrait {
   size: A3 portrait;
-} */
+}
 
 .page[size="A3"][orientation="landscape"] {
-  /* page: a3landscape; */
+  page: a3landscape;
   width: 420mm;
   height: 296.8mm;
 }
-/* @page a3landscape {
-  margin: 0;
+@page a3landscape {
   size: A3 landscape;
-} */
+}
 
 .page[size="A5"][orientation="portrait"] {
-  /* page: a5portrait; */
+  page: a5portrait;
   width: 148mm;
   height: 210mm;
 }
-/* @page a5portrait {
-  margin: 0;
+@page a5portrait {
   size: A5 portrait;
-} */
+}
 
 .page[size="A5"][orientation="landscape"] {
-  /* page: a5landscape; */
+  page: a5landscape;
   width: 210mm;
   height: 148mm;
 }
-/* @page a5landscape {
-  margin: 0;
+@page a5landscape {
   size: A5 landscape;
-} */
+}
 
 /* Typography */
 h1, h2, h3, h4, h5, h6 {
@@ -174,7 +172,6 @@ p {
   display: grid;
   grid-gap: 0;
   gap: 0;
-  /* align-content: start; */
   grid-template-columns: auto;
   grid-template-rows: auto 1fr auto;
   grid-template-areas: "header" "main" "footer";
@@ -182,12 +179,10 @@ p {
 
 .header {
   grid-area: header;
-  /* align-self: start; */
 }
 
 .main {
   grid-area: main;
-  /* align-self: start; */
 }
 
 .footer {
@@ -198,7 +193,7 @@ p {
 .main-grid {
   grid-area: main;
   display: grid;
-  grid-column-gap: 25mm;
+  grid-column-gap: 5cm;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr auto;
   grid-template-areas: "main-left main-right" "footer-left footer-right";
@@ -206,16 +201,18 @@ p {
 
 .main-left {
   grid-area: main-left;
+  position: relative;
 }
 
 .main-right {
   grid-area: main-right;
+  position: relative;
 }
 
 .footer-grid {
   grid-area: footer;
   display: grid;
-  grid-column-gap: 25mm;
+  grid-column-gap: 5cm;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr auto;
   grid-template-areas: "header header" "footer-left footer-right";
@@ -252,12 +249,12 @@ p {
 hr {
   border: 0;
   border-top: 1px solid #eee;
-  border-color: #000;
+  border-color: #191919;
   height: 1px;
   margin: 3px 0;
 }
 .hr-grau {
-  border-color: #646464 !important;
+  border-color: #333 !important;
 }
 
 .fett {
@@ -273,7 +270,7 @@ hr {
 }
 
 .grau * {
-  color: #646464 !important;
+  color: #333 !important;
 }
 
 ul.dashes {
@@ -289,12 +286,4 @@ ul.dashes li:before {
 
 .schulnummer {
   text-align: left;
-}
-
-.wasserzeichen {
-  position: absolute;
-  opacity: 0.5;
-  z-index: 99;
-  color: red;
-  font-size: 96pt;
 }
