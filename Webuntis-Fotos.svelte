@@ -15,17 +15,13 @@
   `,
     (e, res) => {
       console.log(e, res.length);
-      Object.entries(_.groupBy(res, "Klasse")).forEach((k) => {
-        fs.mkdirSync(`${base}/${k[0]}`);
-        k[1].forEach((f) => {
+      res.forEach((f) => {
           const data = new Uint8Array(Buffer.from(f.Foto, "binary"));
-          fs.writeFile(`${base}/${k[0]}/${f.ID}.jpg`, data, (err) => {
+          fs.writeFile(`${base}/${f.ID}.jpg`, data, (err) => {
             if (err) throw err;
           });
         });
       });
-    }
-  );
 </script>
 
 Fotos werden unter

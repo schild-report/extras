@@ -3,7 +3,10 @@
     {#each _.chunk(schueler, 6) as slice}
       <div class="page" orientation="portrait" size="A4" style="font-family: sans; font-size: .98rem">
         <div class="grid">
-          <b style="padding: 5px 0 0 5px">{klasse}</b>
+          <div style="display: flex; justify-content: space-between;">
+            <div><b style="padding: 5px 0 0 5px">{klasse}</b></div> 
+            <div style="padding: 5px 5px 0 0 ">{datum(Date.now())}</div>
+          </div>
           {#each slice as s}
             <div>
               <table style="width: 80%; margin-bottom: 8px; margin-left: 30px">
@@ -17,12 +20,11 @@
                 </tr>
               </table>
             <div style="padding: 0 30px 0 30px;">
-              <b>Zugangsdaten zum Pädagogischen Netz des {privat.schulname} für das Schuljahr 2022/23, 2. Halbjahr</b>
-              <br>Bitte beachten Sie, mit der Verwendung der Zugangsdaten
-              bestätigen Sie, dass sie die Sie die Nutzungsordnung für das
-              pädagogische Netz gelesen und zugestimmt haben.
-            Zugang zu ihrer persönlichen BK-Seite haben Sie unter <b>{privat.meinbk}</b>.
-            Hier bekommen Sie auch einen persönlichen WLAN-Zugang. Heben Sie diesen Zettel das ganze Schuljahr über gut auf und machen Sie zur Sicherheit ein Foto davon.
+              <b>Zugangsdaten zum Pädagogischen Netz des {privat.schulname} für das Schuljahr 2023/24</b>
+              <br>Mit der Verwendung der Zugangsdaten bestätigen Sie Ihre Zustimmung zur Nutzungsordnung für das
+              Pädagogische Netz.
+              <br>Unter <b>https://{privat.meinbk}</b> können Sie einen persönlichen WLAN-Zugang anfordern.
+              <br>Heben Sie diesen Zettel das ganze Schuljahr über gut auf und machen Sie zur Sicherheit ein Foto davon.
             </div>
             </div>
             <hr>
@@ -45,6 +47,7 @@
 
 <script>
   import Hashids from 'hashids'
+  import { datum } from './helfer';
   const mysql = R('mysql')
   export let knexConfig, privat
   let gruppe = [], regel, foerder
@@ -61,7 +64,7 @@ mysql_connection2.connect();
 const query = `SELECT ID, Name, Vorname, Klasse, Geburtsdatum, SchulnrEigner
                         FROM schueler
                         WHERE (Status = 2 OR Status=6) AND Geloescht = "-" AND Gesperrt = "-"
-                        ORDER BY Klasse, Name ASC`
+                        ORDER BY ASDSchulform, Klasse, Name ASC`
 mysql_connection.query(query, (e,res)=> e ? console.log(e, "reg"): (regel=res))
 mysql_connection2.query(query, (e,res)=> e ? console.log(e, "förder"): (foerder=res))
 $: if (regel && foerder) gruppe = gruppe.concat(regel, foerder)

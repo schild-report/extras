@@ -38,7 +38,7 @@ Siehe auch https://docs.software-univention.de/ucsschool-import-handbuch-4.4.htm
   );
   const h = (id) => hashids.encode(id);
   const klasse = k => /^.*[0-9]{2,}.*?$/.test(k) ? k.slice(0, -1) : k
-  
+  const prefix = (s) => String(s.SchulnrEigner) === String(privat.schulnummer) ? "b":"k"
   const mysql_connection = mysql.createConnection(knexConfig.connection);
   knexConfig.connection.database="schild_kbk"
   const mysql_connection2 = mysql.createConnection(knexConfig.connection);
@@ -54,5 +54,5 @@ Siehe auch https://docs.software-univention.de/ucsschool-import-handbuch-4.4.htm
 </script>
 {#if regel}
 <pre>ID,Nachname,Vornamen,Klasse,Passwort,Geburtstag,Email
-{#each regel as s}b{s.ID},{s.Name},{s.Vorname},{klasse(s.Klasse)},{h( s.ID)},{new Date(s.Geburtsdatum).toJSON().slice(0, 10)},{slugify(s.Vorname)}.{slugify(s.Name)}@fvb-berufskolleg.de<br>{/each}{#each foerder as s}k{s.ID},{s.Name},{s.Vorname},{klasse(s.Klasse)},{h( s.ID)},{new Date(s.Geburtsdatum).toJSON().slice(0, 10)},{slugify(s.Vorname)}.{slugify(s.Name)}@fvb-berufskolleg.de<br>{/each}</pre>
+{#each regel as s}b{s.ID},{s.Name},{s.Vorname},{klasse(s.Klasse)},{h(1+s.ID)},{new Date(s.Geburtsdatum).toJSON().slice(0, 10)},{slugify(s.Vorname)}.{slugify(s.Name)}@fvb-berufskolleg.de<br>{/each}{#each foerder as s}k{s.ID},{s.Name},{s.Vorname},{klasse(s.Klasse)},{h(2+s.ID)},{new Date(s.Geburtsdatum).toJSON().slice(0, 10)},{slugify(s.Vorname)}.{slugify(s.Name)}@fvb-berufskolleg.de<br>{/each}</pre>
 {/if}
