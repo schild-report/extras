@@ -17,7 +17,7 @@
       console.log(e, res.length);
       res.forEach((f) => {
           const data = new Uint8Array(Buffer.from(f.Foto, "binary"));
-          fs.writeFile(`${base}/${f.ID}.jpg`, data, (err) => {
+          fs.writeFile(`${base}/b${f.ID}.jpg`, data, (err) => {
             if (err) throw err;
           });
         });
