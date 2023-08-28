@@ -7,12 +7,12 @@
   let regel;
   if (!privat.paedml_salt) throw "Kein Salt";
   const hashids = new Hashids( privat.paedml_salt, 8, "abcdefghkmnpqrstuvwxyz23456789");
-  const mysql_connection = mysql.createConnection(knexConfig.connection);
   knexConfig.connection.database="schild_kbk"
+  const mysql_connection = mysql.createConnection(knexConfig.connection);
   mysql_connection.connect();
   const query = `SELECT ID, Name, Vorname, Klasse
                           FROM schueler
-                          WHERE Status = 2 AND Geloescht = "-" AND Gesperrt = "-" AND Klasse LIKE "%23_1"
+                          WHERE Status = 2 AND Geloescht = "-" AND Gesperrt = "-"
                           ORDER BY Klasse, Name ASC`
   mysql_connection.query(query, (e,res)=> e ? console.log(e, "reg"): (regel=res))
 </script>
