@@ -63,10 +63,12 @@ mysql_connection.connect();
 mysql_connection2.connect();
 const query = `SELECT ID, Name, Vorname, Klasse, Geburtsdatum, SchulnrEigner
                         FROM schueler
-                        WHERE (Status = 2 OR Status=6) AND Geloescht = "-" AND Gesperrt = "-"
+                        WHERE Status = 2
+                          AND Geloescht = "-"
+                          AND Gesperrt = "-"
                         ORDER BY ASDSchulform, Klasse, Name ASC`
-mysql_connection.query(query, (e,res)=> e ? console.log(e, "reg"): (regel=res))
-mysql_connection2.query(query, (e,res)=> e ? console.log(e, "förder"): (foerder=res))
+mysql_connection.query(query, async (e,res)=> e ? console.log(e, "reg"): (regel = await updater(res)))
+mysql_connection2.query(query, async (e,res)=> e ? console.log(e, "förder"): (foerder = await updater(res)))
 $: if (regel && foerder) gruppe = gruppe.concat(regel, foerder)
   const _ = R('lodash')
 </script>

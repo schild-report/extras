@@ -96,3 +96,11 @@ export function slugify(text, separator) {
 
   return text;
 }
+
+import { names } from "./names";
+export const updater = async schueler => {
+  for (const s of schueler)
+    if (names.has(s.ID))
+      s.Vorname = names.get(s.ID);
+  return schueler;
+}

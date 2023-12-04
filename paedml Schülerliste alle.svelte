@@ -26,7 +26,7 @@ Siehe auch https://docs.software-univention.de/ucsschool-import-handbuch-4.4.htm
 -->
 <script>
   import Hashids from "hashids";
-  import {slugify} from './helfer'
+  import {slugify, updater} from './helfer'
   const mysql = R("mysql");
   export let knexConfig, privat
   let regel, foerder;
@@ -53,8 +53,8 @@ Siehe auch https://docs.software-univention.de/ucsschool-import-handbuch-4.4.htm
                           JOIN eigeneschule_fachklassen f ON Fachklasse_ID=f.ID 
                           WHERE s.Status = 2 AND s.Geloescht = "-" AND s.Gesperrt = "-"
                           ORDER BY Klasse, Name ASC`
-  mysql_connection.query(query, (e,res)=> e ? console.log(e, "reg"): (regel=res))
-  mysql_connection2.query(query, (e,res)=> e ? console.log(e, "förder"): (foerder=res))
+  mysql_connection.query(query, async (e,res)=> e ? console.log(e, "reg"): (regel = await updater(res)))
+  mysql_connection2.query(query, async (e,res)=> e ? console.log(e, "förder"): (foerder = await updater(res)))
 </script>
 {#if regel}
 <pre>ID,Nachname,Vornamen,Klasse,Passwort,Geburtstag,Email
