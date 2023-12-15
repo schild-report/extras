@@ -47,7 +47,7 @@
 
 <script>
   import Hashids from 'hashids'
-  import { datum } from './helfer';
+  import { datum, updater } from './helfer';
   const mysql = R('mysql')
   export let knexConfig, privat
   let gruppe = [], regel, foerder

@@ -1,5 +1,6 @@
 <script>
   const mysql = R("mysql");
+  import { updater } from './helfer';
   export let knexConfig, privat
   let gruppe = [], regel, foerder
   const klasse = k => /^.*[0-9]{2,}.*?$/.test(k) ? k.slice(0, -1) : k;
