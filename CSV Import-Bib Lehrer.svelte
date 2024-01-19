@@ -5,7 +5,7 @@
   const mysql_connection = mysql.createConnection(knexConfig.connection);
   mysql_connection.connect();
   mysql_connection.query(
-    ` SELECT ID, Nachname, Vorname, (SELECT Schuljahr FROM eigeneschule) AS jahr FROM k_lehrer WHERE Sichtbar="+";`,
+    ` SELECT ID, Nachname, Vorname, 2023 AS jahr FROM k_lehrer WHERE Sichtbar="+";`,
     (e, res) => {
       console.log(e);
       gruppe = res;
