@@ -98,9 +98,19 @@ export function slugify(text, separator) {
 }
 
 import { names } from "./names";
-export const updater = async schueler => {
-  for (const s of schueler)
-    if (names.has(s.ID))
-      s.Vorname = names.get(s.ID);
+export const updater = (schueler, privat) => {
+  for (const s of schueler) {
+    s.Geburtsdatum = new Date(s.Geburtsdatum).toJSON().slice(0, 10);
+    s.slug = `${slugify(s.Vorname)}.${slugify(s.Name)}`;
+    const nr = s.SchulnrEigner || s.Schulnummer;
+    s.prefix = nr == privat.schulnummer ? 'b':'k';
+    s.Klasse = /^.*[0-9]{2,}.*?$/.test(s.Klasse) ? s.Klasse.slice(0, -1) : s.Klasse;
+    if (names.has(s.ID)) {
+      const o = names.get(s.ID);
+      s.Vorname = o.name || s.Vorname;
+      s.slug = o.slug || `${slugify(s.Vorname)}.${slugify(s.Name)}`;
+      console.log(JSON.stringify(s));
+    }
+  }
   return schueler;
 }

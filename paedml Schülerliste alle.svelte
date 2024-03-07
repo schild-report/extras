@@ -19,32 +19,28 @@ Siehe auch https://docs.software-univention.de/ucsschool-import-handbuch-4.4.htm
   },
   "email": "<username><maildomain>"
   },
-  "maildomain": "@bkbethel.de",
+  "maildomain": "@die_domain",
   "school": "schule",
   "password_length": 8
 }
 -->
 <script>
   import Hashids from "hashids";
-  import {slugify, updater} from './helfer'
+  import {updater} from './helfer'
   const mysql = R("mysql");
   export let knexConfig, privat
   let regel, foerder;
   if (!privat.paedml_salt) throw "Kein Salt";
-  const hashids = new Hashids(
-    privat.paedml_salt,
-    8,
-    "abcdefghkmnpqrstuvwxyz23456789"
-  );
+  if (!privat.domain) throw "Keine Domain";
+  const hashids = new Hashids( privat.paedml_salt, 8, "abcdefghkmnpqrstuvwxyz23456789");
   const h = (id) => hashids.encode(id);
-  const klasse = k => /^.*[0-9]{2,}.*?$/.test(k) ? k.slice(0, -1) : k
-  const prefix = (s) => String(s.SchulnrEigner) === String(privat.schulnummer) ? "b":"k"
+  // const klasse = k => /^.*[0-9]{2,}.*?$/.test(k) ? k.slice(0, -1) : k
   const mysql_connection = mysql.createConnection(knexConfig.connection);
   knexConfig.connection.database="schild_kbk"
   const mysql_connection2 = mysql.createConnection(knexConfig.connection);
   mysql_connection.connect();
   mysql_connection2.connect();
-  const hasNonAsciiCharacters = (str) => /[^\u0000-\u007f]/.test(str);
+  // const hasNonAsciiCharacters = (str) => /[^\u0000-\u007f]/.test(str);
   const query = `SELECT s.ID, Name, Vorname, Klasse, Geburtsdatum, 
                             SUBSTRING(ASDSchulform,1,1) as Anlage,
                             s.SchulnrEigner as Schulnummer,
@@ -53,10 +49,12 @@ Siehe auch https://docs.software-univention.de/ucsschool-import-handbuch-4.4.htm
                           JOIN eigeneschule_fachklassen f ON Fachklasse_ID=f.ID 
                           WHERE s.Status = 2 AND s.Geloescht = "-" AND s.Gesperrt = "-"
                           ORDER BY Klasse, Name ASC`
-  mysql_connection.query(query, async (e,res)=> e ? console.log(e, "reg"): (regel = await updater(res)))
-  mysql_connection2.query(query, async (e,res)=> e ? console.log(e, "förder"): (foerder = await updater(res)))
+  mysql_connection.query(query, async (e,res)=> e ? console.log(e, "reg"): (regel = updater(res, privat)))
+  mysql_connection2.query(query, async (e,res)=> e ? console.log(e, "förder"): (foerder = updater(res, privat)))
+  $: gruppe = [...regel, ...foerder]
 </script>
-{#if regel}
+{#if regel && foerder}
 <pre>ID,Nachname,Vornamen,Klasse,Passwort,Geburtstag,Email
-{#each regel as s}b{s.ID},{s.Name},{s.Vorname},{klasse(s.Klasse)},{h(1+s.ID)},{new Date(s.Geburtsdatum).toJSON().slice(0, 10)},{slugify(s.Vorname)}.{slugify(s.Name)}@fvb-berufskolleg.de<br>{/each}{#each foerder as s}k{s.ID},{s.Name},{s.Vorname},{klasse(s.Klasse)},{h(2+s.ID)},{new Date(s.Geburtsdatum).toJSON().slice(0, 10)},{slugify(s.Vorname)}.{slugify(s.Name)}@fvb-berufskolleg.de<br>{/each}</pre>
+{#each regel as s}{s.prefix}{s.ID},{s.Name},{s.Vorname},{s.Klasse},{h(1+s.ID)},{s.Geburtsdatum},{s.slug}@{privat.domain}<br>{/each}{#each foerder as s}{s.prefix}{s.ID},{s.Name},{s.Vorname},{s.Klasse},{h(2+s.ID)},{s.Geburtsdatum},{s.slug}@{privat.domain}<br>{/each}</pre>
 {/if}
+<pre>{#if gruppe}{#each gruppe as s}{s.ID},{s.Name},{s.Vorname},{s.Klasse},{s.Geschlecht},{s.Geburtsdatum}<br>{/each}{/if}</pre>

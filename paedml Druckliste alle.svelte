@@ -12,11 +12,11 @@
               <table style="width: 80%; margin-bottom: 8px; margin-left: 30px">
                 <tr>
                   <td style="width: 60%"><b>{s.Name}, {s.Vorname}</b></td>
-                  <td>Ihr Benutzername: <code> {prefix(s)}{s.ID}</code></td>
+                  <td>Ihr Benutzername: <code> {s.ID}</code></td>
                 </tr>
                 <tr>
                   <td></td>
-                  <td>Ihr Passwort: <code>{h((prefix(s) === 'b' ? 1:2) + s.ID)}</code></td>
+                  <td>Ihr Passwort: <code>{h((s.prefix === 'b' ? 1:2) + s.ID)}</code></td>
                 </tr>
               </table>
             <div style="padding: 0 30px 0 30px;">
@@ -49,26 +49,25 @@
   import Hashids from 'hashids'
   import { datum, updater } from './helfer';
   const mysql = R('mysql')
+  const _ = R('lodash')
   export let knexConfig, privat
   let gruppe = [], regel, foerder
-  if (!privat.paedml_salt) throw 'Kein Salt'
   if (!privat.schulnummer || !privat.paedml_salt || !privat.schulname || !privat.meinbk) throw "Daten privat fehlen"
   const hashids = new Hashids(privat.paedml_salt, 8, 'abcdefghkmnpqrstuvwxyz23456789')
   const h = (id) => hashids.encode(id)
-  const prefix = (s) => String(s.SchulnrEigner) === String(privat.schulnummer) ? "b":"k"
   const mysql_connection = mysql.createConnection(knexConfig.connection);
-knexConfig.connection.database="schild_kbk"
-const mysql_connection2 = mysql.createConnection(knexConfig.connection);
-mysql_connection.connect();
-mysql_connection2.connect();
-const query = `SELECT ID, Name, Vorname, Klasse, Geburtsdatum, SchulnrEigner
-                        FROM schueler
-                        WHERE Status = 2
-                          AND Geloescht = "-"
-                          AND Gesperrt = "-"
-                        ORDER BY ASDSchulform, Klasse, Name ASC`
-mysql_connection.query(query, async (e,res)=> e ? console.log(e, "reg"): (regel = await updater(res)))
-mysql_connection2.query(query, async (e,res)=> e ? console.log(e, "förder"): (foerder = await updater(res)))
-$: if (regel && foerder) gruppe = gruppe.concat(regel, foerder)
-  const _ = R('lodash')
+  knexConfig.connection.database="schild_kbk"
+  const mysql_connection2 = mysql.createConnection(knexConfig.connection);
+  mysql_connection.connect();
+  mysql_connection2.connect();
+  const query = `SELECT ID, Name, Vorname, Klasse, Geburtsdatum, 
+                    SchulnrEigner as Schulnummer
+                FROM schueler
+                WHERE Status = 2
+                  AND Geloescht = "-"
+                  AND Gesperrt = "-"
+                ORDER BY ASDSchulform, Klasse, Name ASC`
+  mysql_connection.query(query, async (e,res)=> e ? console.log(e, "reg"): (regel = updater(res, privat)))
+  mysql_connection2.query(query, async (e,res)=> e ? console.log(e, "förder"): (foerder = updater(res, privat)))
+  $: if (regel && foerder) gruppe = gruppe.concat(regel, foerder)
 </script>
