@@ -34,7 +34,6 @@ Siehe auch https://docs.software-univention.de/ucsschool-import-handbuch-4.4.htm
   if (!privat.domain) throw "Keine Domain";
   const hashids = new Hashids( privat.paedml_salt, 8, "abcdefghkmnpqrstuvwxyz23456789");
   const h = (id) => hashids.encode(id);
-  // const klasse = k => /^.*[0-9]{2,}.*?$/.test(k) ? k.slice(0, -1) : k
   const mysql_connection = mysql.createConnection(knexConfig.connection);
   knexConfig.connection.database="schild_kbk"
   const mysql_connection2 = mysql.createConnection(knexConfig.connection);
