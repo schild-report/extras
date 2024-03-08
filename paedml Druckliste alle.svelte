@@ -12,7 +12,7 @@
               <table style="width: 80%; margin-bottom: 8px; margin-left: 30px">
                 <tr>
                   <td style="width: 60%"><b>{s.Name}, {s.Vorname}</b></td>
-                  <td>Ihr Benutzername: <code> {s.ID}</code></td>
+                  <td>Ihr Benutzername: <code> {s.prefix}{s.ID}</code></td>
                 </tr>
                 <tr>
                   <td></td>

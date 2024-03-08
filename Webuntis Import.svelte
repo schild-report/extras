@@ -20,4 +20,4 @@
   $: gruppe = [...regel, ...foerder];
 </script>
 
-<pre>{#if gruppe}{#each gruppe as s}{s.ID},{s.Name},{s.Vorname},{s.Klasse},{s.Geschlecht},{s.Geburtsdatum}<br>{/each}{/if}</pre>
+<pre>{#if gruppe}{#each gruppe as s}{s.prefix}{s.ID},{s.Name},{s.Vorname},{s.Klasse},{s.Geschlecht},{s.Geburtsdatum}<br>{/each}{/if}</pre>
