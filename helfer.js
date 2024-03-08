@@ -105,8 +105,8 @@ export const updater = (schueler, privat) => {
     const nr = s.SchulnrEigner || s.Schulnummer;
     s.prefix = nr == privat.schulnummer ? 'b':'k';
     s.Klasse = /^.*[0-9]{2,}.*?$/.test(s.Klasse) ? s.Klasse.slice(0, -1) : s.Klasse;
-    if (names.has(s.ID)) {
-      const o = names.get(s.ID);
+    const o = names.get(s.ID);
+    if (o?.bk === s.prefix) {
       s.Vorname = o.name || s.Vorname;
       s.slug = o.slug || `${slugify(s.Vorname)}.${slugify(s.Name)}`;
       console.log(JSON.stringify(s));

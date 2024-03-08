@@ -17,7 +17,7 @@
                 ORDER BY Klasse, Name ASC`
   mysql_connection.query(query, (e,res)=> e ? console.log(e, "reg"): (regel = updater(res, privat)));
   mysql_connection2.query(query, (e,res)=> e ? console.log(e, "förder"): (foerder = updater(res, privat)));
-  $: gruppe = [...regel, ...foerder]
+  $: gruppe = [...regel, ...foerder];
 </script>
 
 <pre>{#if gruppe}{#each gruppe as s}{s.ID},{s.Name},{s.Vorname},{s.Klasse},{s.Geschlecht},{s.Geburtsdatum}<br>{/each}{/if}</pre>

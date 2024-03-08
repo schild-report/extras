@@ -29,7 +29,7 @@ Siehe auch https://docs.software-univention.de/ucsschool-import-handbuch-4.4.htm
   import {updater} from './helfer'
   const mysql = R("mysql");
   export let knexConfig, privat
-  let regel, foerder;
+  let regel = [], foerder = [];
   if (!privat.paedml_salt) throw "Kein Salt";
   if (!privat.domain) throw "Keine Domain";
   const hashids = new Hashids( privat.paedml_salt, 8, "abcdefghkmnpqrstuvwxyz23456789");
