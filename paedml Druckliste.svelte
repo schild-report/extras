@@ -15,7 +15,7 @@ Grüße
   schueler = updater(schueler, privat);
   if (!privat.paedml_salt) throw 'Kein Salt'
   const hashids = new Hashids(privat.paedml_salt, 8, 'abcdefghkmnpqrstuvwxyz23456789')
-  const h = (s) => hashids.encode(s.prefix === 'b' ? 1:2 + s.ID)
+  const h = (s) => hashids.encode((s.prefix === 'b' ? 1:2) + s.ID)
 </script>
 <style>
   .big {

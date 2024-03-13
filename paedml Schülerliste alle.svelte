@@ -56,4 +56,3 @@ Siehe auch https://docs.software-univention.de/ucsschool-import-handbuch-4.4.htm
 <pre>ID,Nachname,Vornamen,Klasse,Passwort,Geburtstag,Email
 {#each regel as s}{s.prefix}{s.ID},{s.Name},{s.Vorname},{s.Klasse},{h(1+s.ID)},{s.Geburtsdatum},{s.slug}@{privat.domain}<br>{/each}{#each foerder as s}{s.prefix}{s.ID},{s.Name},{s.Vorname},{s.Klasse},{h(2+s.ID)},{s.Geburtsdatum},{s.slug}@{privat.domain}<br>{/each}</pre>
 {/if}
-<pre>{#if gruppe}{#each gruppe as s}{s.ID},{s.Name},{s.Vorname},{s.Klasse},{s.Geschlecht},{s.Geburtsdatum}<br>{/each}{/if}</pre>
