@@ -11,7 +11,8 @@
   const query = `
                 SELECT s.ID, s.Name, s.Vorname, s.Klasse,
                   CASE s.Geschlecht WHEN 3 THEN 'm' ELSE 'w' END as Geschlecht,
-                  s.Geburtsdatum, s.SchulnrEigner as Schulnummer
+                  DATE_FORMAT(s.Geburtsdatum, "%d.%m.%Y") as Geburtsdatum,
+                  s.SchulnrEigner as Schulnummer
                 FROM schueler AS s
                 WHERE Status = 2 AND Geloescht = "-" AND Gesperrt = "-"
                 ORDER BY Klasse, Name ASC`

@@ -100,7 +100,8 @@ export function slugify(text, separator) {
 import { names } from "./names";
 export const updater = (schueler, privat) => {
   for (const s of schueler) {
-    s.Geburtsdatum = new Date(s.Geburtsdatum).toJSON().slice(0, 10);
+    if (s.Geburtsdatum.toString().length > 10)
+      s.Geburtsdatum = new Date(s.Geburtsdatum).toJSON().slice(0, 10);
     s.slug = `${slugify(s.Vorname)}.${slugify(s.Name)}`;
     const nr = s.SchulnrEigner || s.Schulnummer;
     s.prefix = nr == privat.schulnummer ? 'b':'k';
