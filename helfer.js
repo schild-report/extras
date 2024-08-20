@@ -104,22 +104,25 @@ export const updater = (schueler) => {
   for (const s of schueler) {
     if (s.Geburtsdatum.toString().length > 10)
       s.Geburtsdatum = new Date(s.Geburtsdatum).toJSON().slice(0, 10);
-    s.username = `${slugify(s.Vorname).slice(0, 3)}${slugify(s.Name).slice(0,4)}`.toLowerCase();
+    if (s.Klasse.includes("24") || (/^A|^Fac/.test(s.ASDSchulform)))
+      s.username = `${slugify(s.Vorname).slice(0, 3)}${slugify(s.Name).slice(0,4)}`.toLowerCase();
+    else
+      s.username = `${s.Schulnummer === 199140 ? 'b':'k'}${s.ID}`
     s.slug = `${slugify(s.Vorname)}.${slugify(s.Name)}`;
     s.Klasse = /^.*[0-9]{2,}.*?$/.test(s.Klasse) ? s.Klasse.slice(0, -1) : s.Klasse;
     s.hash = parseInt(s.Geburtsdatum.replaceAll("-", "")+(s.Vorname.charCodeAt(0)+s.Vorname.length));
     if (set2.has(s.hash))
-      console.log('gibs schon', s.Name, s.Vorname, s.Geburtsdatum, s.hash, s.Klasse)
+      console.warn('Hash doppelt: ', s.Name, s.Vorname, s.Geburtsdatum, s.hash, s.Klasse)
     set2.add(s.hash)
     const o = names.get(s.GU_ID);
     if (o) {
       s.Vorname = o.name || s.Vorname;
-      s.username = o.username || `${slugify(s.Vorname).slice(0,3)}${slugify(s.Name).slice(0,4)}`.toLowerCase();
+      s.username = o.username || (s.Klasse.includes("24") ? `${slugify(s.Vorname).slice(0,3)}${slugify(s.Name).slice(0,4)}`.toLowerCase() : `${s.Schulnummer === 199140 ? 'b':'k'}${s.ID}`);
       s.slug = o.slug || `${slugify(s.Vorname)}.${slugify(s.Name)}`;
       console.log(JSON.stringify(s));
     }
     if (set.has(s.username))
-      console.log('doppelt:', s.username, s.Name, s.Vorname, s.GU_ID);
+      console.error('doppelt, ersetzen:', s.username, s.Name, s.Vorname, s.GU_ID);
     set.add(s.username);
   }
   console.log(set2.size)
