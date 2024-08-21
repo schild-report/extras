@@ -31,12 +31,16 @@
 
 <style>
   @import 'css/main.css';
-  .page {padding: 0; display: flex; flex-flow: column; height: 100%;}
+  .page {
+    padding: 0;
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+  }
   .grid {
     flex: 1;
     display: grid;
     grid-template-rows: repeat(7, 1fr);
-    
 }
 </style>
 
@@ -66,6 +70,5 @@
     if (regel.length && foerder.length)
       gruppe = updater(regel.concat(foerder));
       gruppe.sort((a,b) => a.Schulform - b.Schulform)
-    gruppe.forEach(s=>console.log(s.Schulform))
     };
 </script>

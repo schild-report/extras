@@ -104,9 +104,8 @@ export const updater = (schueler) => {
   for (const s of schueler) {
     if (s.Geburtsdatum.toString().length > 10)
       s.Geburtsdatum = new Date(s.Geburtsdatum).toJSON().slice(0, 10);
+    s.username = `${slugify(s.Vorname).slice(0, 3)}${slugify(s.Name).slice(0,4)}`.toLowerCase();
     s.slug = `${slugify(s.Vorname)}.${slugify(s.Name)}`;
-    const nr = s.SchulnrEigner || s.Schulnummer;
-    s.prefix = nr == privat.schulnummer ? 'b':'k';
     s.Klasse = /^.*[0-9]{2,}.*?$/.test(s.Klasse) ? s.Klasse.slice(0, -1) : s.Klasse;
     s.hash = parseInt(s.Geburtsdatum.replaceAll("-", "")+(s.Vorname.charCodeAt(0)+s.Vorname.length));
     if (hashset.has(s.hash))
