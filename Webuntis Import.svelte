@@ -9,16 +9,16 @@
   mysql_connection.connect();
   mysql_connection2.connect();
   const query = `
-                SELECT s.ID, s.Name, s.Vorname, s.Klasse, s.GU_ID,
+                SELECT s.ID, s.Name, s.Vorname, s.Klasse,
                   CASE s.Geschlecht WHEN 3 THEN 'm' ELSE 'w' END as Geschlecht,
                   DATE_FORMAT(s.Geburtsdatum, "%d.%m.%Y") as Geburtsdatum,
                   s.SchulnrEigner as Schulnummer
                 FROM schueler AS s
                 WHERE Status = 2 AND Geloescht = "-" AND Gesperrt = "-"
                 ORDER BY Klasse, Name ASC`
-  mysql_connection.query(query, (e,res)=> e ? console.log(e, "reg"): (regel = res));
-  mysql_connection2.query(query, (e,res)=> e ? console.log(e, "förder"): (foerder = res));
-  $: gruppe = updater([...regel, ...foerder]);
+  mysql_connection.query(query, (e,res)=> e ? console.log(e, "reg"): (regel = updater(res, privat)));
+  mysql_connection2.query(query, (e,res)=> e ? console.log(e, "förder"): (foerder = updater(res, privat)));
+  $: gruppe = [...regel, ...foerder];
 </script>
 
-<pre>{#if gruppe}{#each gruppe as s}{s.username},{s.Name},{s.Vorname},{s.Klasse},{s.Geschlecht},{s.Geburtsdatum}<br>{/each}{/if}</pre>
+<pre>{#if gruppe}{#each gruppe as s}{s.prefix}{s.ID},{s.Name},{s.Vorname},{s.Klasse},{s.Geschlecht},{s.Geburtsdatum}<br>{/each}{/if}</pre>

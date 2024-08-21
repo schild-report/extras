@@ -62,7 +62,7 @@
   const mysql_connection2 = mysql.createConnection(knexConfig.connection);
   mysql_connection.connect();
   mysql_connection2.connect();
-  const query = `SELECT ID, Name, Vorname, Klasse, Geburtsdatum, GU_ID, SchulnrEigner as Schulnummer
+  const query = `SELECT ID, Name, Vorname, Klasse, Geburtsdatum, GU_ID
                 FROM schueler
                 WHERE Status = 2 AND Geloescht = "-" AND Gesperrt = "-"
                 ORDER BY ASDSchulform, Klasse, Name ASC`

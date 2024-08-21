@@ -40,7 +40,7 @@ Siehe auch https://docs.software-univention.de/ucsschool-import-handbuch-4.4.htm
   mysql_connection.connect();
   mysql_connection2.connect();
   // const hasNonAsciiCharacters = (str) => /[^\u0000-\u007f]/.test(str);
-  const query = `SELECT s.ID, Name, Vorname, Klasse, Geburtsdatum, GU_ID, SchulnrEigner as Schulnummer
+  const query = `SELECT s.ID, Name, Vorname, Klasse, Geburtsdatum, GU_ID
                           FROM schueler s
                           WHERE s.Status = 2 AND s.Geloescht = "-" AND s.Gesperrt = "-"
                           ORDER BY Klasse, Name ASC`
