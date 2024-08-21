@@ -1,33 +1,27 @@
 {#if gruppe}
   {#each Object.entries(_.groupBy(gruppe, 'Klasse')) as [klasse, schueler]}
-    {#each _.chunk(schueler, 6) as slice}
-      <div class="page" orientation="portrait" size="A4" style="font-family: sans; font-size: .98rem">
+    {#each _.chunk(schueler, 7) as slice}
+      <div class="page" orientation="portrait" size="A4" style="font-family: sans; font-size: .99rem">
+        <div style="display: flex; justify-content: space-between; padding: 8px 8px 0px 8px">
+          <div><b>{klasse}</b></div>
+          <div>{datum(Date.now())} - {schueler[0].Lehrer}</div>
+        </div>
         <div class="grid">
-          <div style="display: flex; justify-content: space-between;">
-            <div><b style="padding: 5px 0 0 5px">{klasse}</b></div> 
-            <div style="padding: 5px 5px 0 0 ">{datum(Date.now())}</div>
-          </div>
           {#each slice as s}
-            <div>
-              <table style="width: 80%; margin-bottom: 8px; margin-left: 30px">
-                <tr>
-                  <td style="width: 60%"><b>{s.Name}, {s.Vorname}</b></td>
-                  <td>Ihr Benutzername: <code> {s.prefix}{s.ID}</code></td>
-                </tr>
-                <tr>
-                  <td></td>
-                  <td>Ihr Passwort: <code>{h((s.prefix === 'b' ? 1:2) + s.ID)}</code></td>
-                </tr>
-              </table>
-            <div style="padding: 0 30px 0 30px;">
-              <b>Zugangsdaten zum Pädagogischen Netz des {privat.schulname} für das Schuljahr 2023/24</b>
+            <div style="padding: 0 3rem 0 30px;">
+              <div style="font-size: 1.2rem;"><b>{s.Name}, {s.Vorname}</b></div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: .5rem; font-size: 1.2rem;">
+                <div>Benutzername: <code> {s.username}</code></div>
+                <div>Passwort: <code>{h(s.hash)}</code></div>
+                <div>Teams: <code>{s.username}@{privat.domain}</code></div>
+              </div>
+              <b>Zugangsdaten zum Pädagogischen Netz des {privat.schulname} für das Schuljahr 2024/25</b>
               <br>Mit der Verwendung der Zugangsdaten bestätigen Sie Ihre Zustimmung zur Nutzungsordnung für das
               Pädagogische Netz.
               <br>Unter <b>https://{privat.meinbk}</b> können Sie einen persönlichen WLAN-Zugang anfordern.
-              <br>Heben Sie diesen Zettel das ganze Schuljahr über gut auf und machen Sie zur Sicherheit ein Foto davon.
+              <br>Heben Sie diesen Zettel das ganze Schuljahr über gut auf und <b>machen Sie zur Sicherheit ein Foto davon.</b>
+              <hr style="margin-top: 1rem;">
             </div>
-            </div>
-            <hr>
           {/each}
         </div>
       </div>
@@ -37,11 +31,12 @@
 
 <style>
   @import 'css/main.css';
-  .page {padding: 0;}
+  .page {padding: 0; display: flex; flex-flow: column; height: 100%;}
   .grid {
+    flex: 1;
     display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    grid-gap: 20px;
+    grid-template-rows: repeat(7, 1fr);
+    
 }
 </style>
 
@@ -60,14 +55,17 @@
   const mysql_connection2 = mysql.createConnection(knexConfig.connection);
   mysql_connection.connect();
   mysql_connection2.connect();
-  const query = `SELECT ID, Name, Vorname, Klasse, Geburtsdatum, 
-                    SchulnrEigner as Schulnummer
+  const query = `SELECT ID, Name, Vorname, Klasse, Geburtsdatum, GU_ID, Lehrer,
+                CASE WHEN ASDSchulform LIKE "A%" THEN 1 WHEN ASDSchulform = "Fac" THEN 1 ELSE 2 END as Schulform
                 FROM schueler
-                WHERE Status = 2
-                  AND Geloescht = "-"
-                  AND Gesperrt = "-"
-                ORDER BY ASDSchulform, Klasse, Name ASC`
-  mysql_connection.query(query, async (e,res)=> e ? console.log(e, "reg"): (regel = updater(res, privat)))
-  mysql_connection2.query(query, async (e,res)=> e ? console.log(e, "förder"): (foerder = updater(res, privat)))
-  $: if (regel && foerder) gruppe = gruppe.concat(regel, foerder)
+                WHERE Status = 2 AND Geloescht = "-" AND Gesperrt = "-"
+                ORDER BY Klasse, Name ASC`
+  mysql_connection.query(query, async (e,res)=> e ? console.log(e, "reg"): (regel = res))
+  mysql_connection2.query(query, async (e,res)=> e ? console.log(e, "förder"): (foerder = res))
+  $: {
+    if (regel.length && foerder.length)
+      gruppe = updater(regel.concat(foerder));
+      gruppe.sort((a,b) => a.Schulform - b.Schulform)
+    gruppe.forEach(s=>console.log(s.Schulform))
+    };
 </script>
