@@ -53,5 +53,5 @@ Siehe auch https://docs.software-univention.de/ucsschool-import-handbuch-4.4.htm
 </script>
 {#if schueler.length}
 <pre>ID,Nachname,Vornamen,Klasse,Passwort,Geburtstag,Email
-{#each schueler as s}{s.username},{s.Name},{s.Vorname},{s.Klasse},{h(s.hash)},{s.Geburtsdatum},{s.slug}@{privat.domain}<br>{/each}</pre>
+{#each schueler as s}{s.username},{s.Name},{s.Vorname},{s.Klasse},{h(s.hash)},{s.Geburtsdatum},{s.username}@{privat.domain}<br>{/each}</pre>
 {/if}

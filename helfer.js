@@ -25,7 +25,7 @@ export const datum = (t) => {
   // gibt ein Datum im deutschen Format zurück
   try {
     return new Date(t).toLocaleDateString('de', {day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Europe/Berlin'})
-  } catch (e) {console.log(e); return}
+  } catch (e) {console.log(e); return 'undefined - Datumsfehler'}
 }
 export const bemerkungen = (hj) => hj.ZeugnisBem ? hj.ZeugnisBem.replace('\r\n', '<br/>') : 'keine'
 export const volljaehrigBei = (s, datum) => {
@@ -100,7 +100,7 @@ export function slugify(text, separator) {
 import { names } from "./names";
 export const updater = (schueler) => {
   const set = new Set();
-  const set2 = new Set();
+  const hashset = new Set();
   for (const s of schueler) {
     if (s.Geburtsdatum.toString().length > 10)
       s.Geburtsdatum = new Date(s.Geburtsdatum).toJSON().slice(0, 10);
@@ -108,20 +108,21 @@ export const updater = (schueler) => {
     s.slug = `${slugify(s.Vorname)}.${slugify(s.Name)}`;
     s.Klasse = /^.*[0-9]{2,}.*?$/.test(s.Klasse) ? s.Klasse.slice(0, -1) : s.Klasse;
     s.hash = parseInt(s.Geburtsdatum.replaceAll("-", "")+(s.Vorname.charCodeAt(0)+s.Vorname.length));
-    if (set2.has(s.hash))
-      console.log('gibs schon', s.Name, s.Vorname, s.Geburtsdatum, s.hash, s.Klasse)
-    set2.add(s.hash)
+    if (hashset.has(s.hash))
+      console.warn('Hash mehrfach vorhanden', s.Name, s.Vorname, s.Geburtsdatum, s.hash, s.Klasse)
+    hashset.add(s.hash)
     const o = names.get(s.GU_ID);
     if (o) {
       s.Vorname = o.name || s.Vorname;
+      s.Geschlecht = o.geschlecht || s.Geschlecht;
       s.username = o.username || `${slugify(s.Vorname).slice(0,3)}${slugify(s.Name).slice(0,4)}`.toLowerCase();
       s.slug = o.slug || `${slugify(s.Vorname)}.${slugify(s.Name)}`;
       console.log(JSON.stringify(s));
     }
     if (set.has(s.username))
-      console.log('doppelt:', s.username, s.Name, s.Vorname, s.GU_ID);
+      console.error('doppelter Username, muss ersetzt werden:', s.username, s.Name, s.Vorname, s.GU_ID);
     set.add(s.username);
   }
-  console.log(set2.size)
+  console.log(hashset.size)
   return schueler;
 }
