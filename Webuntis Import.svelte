@@ -1,7 +1,7 @@
 <script>
   const mysql = R("mysql");
-  import { updater, datum } from './helfer';
-  export let knexConfig, privat
+  import { updater } from './helfer';
+  export let knexConfig;
   let regel = [], foerder = [], gruppe = [];
   const mysql_connection = mysql.createConnection(knexConfig.connection);
   knexConfig.connection.database="schild_kbk"

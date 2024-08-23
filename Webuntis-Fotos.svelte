@@ -1,23 +1,23 @@
 <script>
   const mysql = R("mysql");
   const fs = R("fs");
-  const _ = R("lodash");
+  import { updater } from './helfer'
   export let knexConfig;
   let base = "/tmp/fotos";
   const mysql_connection = mysql.createConnection(knexConfig.connection);
   mysql_connection.connect();
   mysql_connection.query(
     `
-  SELECT f.Foto, s.ID, SUBSTRING(s.Klasse, 1, 4) AS Klasse
+  SELECT f.Foto, s.ID, s.GU_ID, s.Vorname, s.Name, s.Geburtsdatum
   FROM schuelerfotos AS f
   JOIN schueler AS s ON (f.Schueler_ID = s.ID)
   WHERE s.Status = 2 AND s.Geloescht = "-" AND s.Gesperrt = "-"
   `,
     (e, res) => {
       console.log(e, res.length);
-      res.forEach((f) => {
+      updater(res).forEach((f) => {
           const data = new Uint8Array(Buffer.from(f.Foto, "binary"));
-          fs.writeFile(`${base}/b${f.ID}.jpg`, data, (err) => {
+          fs.writeFile(`${base}/${f.username}.jpg`, data, (err) => {
             if (err) throw err;
           });
         });

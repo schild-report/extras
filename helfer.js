@@ -120,7 +120,7 @@ export const updater = (schueler) => {
       console.log(JSON.stringify(s));
     }
     if (set.has(s.username))
-      console.error('doppelter Username, muss ersetzt werden:', s.username, s.Name, s.Vorname, s.GU_ID);
+      console.error('doppelter Username, muss ersetzt werden:', `names.set("${s.GU_ID}", {username: "${slugify(s.Vorname).slice(0,2).toLowerCase()}${slugify(s.Name).slice(0,5).toLowerCase()}"});`, s.username, s.Name, s.Vorname);
     set.add(s.username);
   }
   console.log(hashset.size)

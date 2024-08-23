@@ -1,8 +1,9 @@
 <pre class="big">
 Hallo {schueler[0].Vorname},
 
-Ihr Benutzername: {schueler[0].prefix}{schueler[0].ID}
+Ihr Benutzername: {schueler[0].username}
 Ihr Passwort: {h(schueler[0])}
+Ihr Teams-Nutzer: {schueler[0].username}@{privat.domain}
 
 Verwenden Sie für Ihren persönlichen Zugang {privat.meinbk}
 
@@ -12,10 +13,10 @@ Grüße
   import Hashids from 'hashids'
     import { updater } from './helfer';
   export let schueler, privat
-  schueler = updater(schueler, privat);
+  schueler = updater(schueler);
   if (!privat.paedml_salt) throw 'Kein Salt'
   const hashids = new Hashids(privat.paedml_salt, 8, 'abcdefghkmnpqrstuvwxyz23456789')
-  const h = (s) => hashids.encode((s.prefix === 'b' ? 1:2) + s.ID)
+  const h = (s) => hashids.encode(s.hash)
 </script>
 <style>
   .big {

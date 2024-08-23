@@ -50,7 +50,7 @@
   const mysql = R('mysql')
   const _ = R('lodash')
   export let knexConfig, privat
-  let gruppe = [], regel, foerder
+  let gruppe = [], regel = [], foerder = [];
   if (!privat.schulnummer || !privat.paedml_salt || !privat.schulname || !privat.meinbk) throw "Daten privat fehlen"
   const hashids = new Hashids(privat.paedml_salt, 8, 'abcdefghkmnpqrstuvwxyz23456789')
   const h = (id) => hashids.encode(id)
