@@ -102,6 +102,10 @@ export const updater = (schueler) => {
   const set = new Set();
   const hashset = new Set();
   for (const s of schueler) {
+    if (s.Geburtsdatum === null) {
+      console.log(s.Vorname, s.Name, "ohne Geburtsdatum");
+      s.Geburtsdatum = new Date();
+    }
     if (s.Geburtsdatum.toString().length > 10)
       s.Geburtsdatum = new Date(s.Geburtsdatum).toJSON().slice(0, 10);
     s.username = `${slugify(s.Vorname).slice(0, 3)}${slugify(s.Name).slice(0,4)}`.toLowerCase();
