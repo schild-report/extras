@@ -97,6 +97,7 @@ export function slugify(text, separator) {
   return text;
 }
 
+// im kommenden Jahr sollen die Passwörter mit Hilfe der Usernames ermittelt werden, die nun individuell sind + hash
 import { names } from "./names";
 export const updater = (schueler) => {
   const set = new Set();
