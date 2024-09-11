@@ -29,7 +29,7 @@ Siehe auch https://docs.software-univention.de/ucsschool-import-handbuch-4.4.htm
   import { updater } from './helfer'
   const mysql = R("mysql");
   export let knexConfig, privat
-  let regel = [], foerder = [], schueler = [];
+  let regel = [], foerder = [], schueler = [], error;
   if (!privat.paedml_salt) throw "Kein Salt";
   if (!privat.domain) throw "Keine Domain";
   const hashids = new Hashids( privat.paedml_salt, 8, "abcdefghkmnpqrstuvwxyz23456789");
@@ -47,11 +47,19 @@ Siehe auch https://docs.software-univention.de/ucsschool-import-handbuch-4.4.htm
   mysql_connection.query(query, async (e,res)=> e ? console.log(e, "reg"): (regel = res))
   mysql_connection2.query(query, async (e,res)=> e ? console.log(e, "förder"): (foerder = res))
   $: {
-    if (regel.length && foerder.length)
+    try {
+      if (regel.length && foerder.length)
       schueler = updater(regel.concat(foerder));
+    console.log('Datensätze verarbeitet: ', schueler.length + '/' + (regel.length+foerder.length))
+    } catch (e) {
+      error = e.message;
+    }
     };
 </script>
 {#if schueler.length}
 <pre>ID,Nachname,Vornamen,Klasse,Passwort,Geburtstag,Email
 {#each schueler as s}{s.username},{s.Name},{s.Vorname},{s.Klasse},{h(s.hash)},{s.Geburtsdatum},{s.username}@{privat.domain}<br>{/each}</pre>
+{/if}
+{#if error}
+  {error}
 {/if}

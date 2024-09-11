@@ -102,6 +102,7 @@ import { names } from "./names";
 export const updater = (schueler) => {
   const set = new Set();
   const hashset = new Set();
+  let counter = 0;
   for (const s of schueler) {
     if (s.Geburtsdatum === null) {
       console.log(s.Vorname, s.Name, "ohne Geburtsdatum");
@@ -123,11 +124,12 @@ export const updater = (schueler) => {
       s.username = o.username || `${slugify(s.Vorname).slice(0,3)}${slugify(s.Name).slice(0,4)}`.toLowerCase();
       s.slug = o.slug || `${slugify(s.Vorname)}.${slugify(s.Name)}`;
       console.log(JSON.stringify(s));
+      counter++
     }
     if (set.has(s.username))
-      console.error('doppelter Username, muss ersetzt werden:', `names.set("${s.GU_ID}", {username: "${slugify(s.Vorname).slice(0,2).toLowerCase()}${slugify(s.Name).slice(0,5).toLowerCase()}"});`, s.username, s.Name, s.Vorname);
+      throw new Error(`doppelter Username, muss ersetzt werden: names.set("${s.GU_ID}", {username: "${slugify(s.Vorname).slice(0,2).toLowerCase()}${slugify(s.Name).slice(0,5).toLowerCase()}"});`);
     set.add(s.username);
   }
-  console.log(hashset.size)
+  console.log(hashset.size, 'Hashes erstellt, ', counter, 'Usernames ersetzt.');
   return schueler;
 }
