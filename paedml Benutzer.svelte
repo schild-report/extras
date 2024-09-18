@@ -61,5 +61,5 @@ Siehe auch https://docs.software-univention.de/ucsschool-import-handbuch-4.4.htm
 {#each schueler as s}{s.username},{s.Name},{s.Vorname},{s.Klasse},{h(s.hash)},{s.Geburtsdatum},{s.username}@{privat.domain}<br>{/each}</pre>
 {/if}
 {#if error}
-  {error}
+  {@html error}
 {/if}

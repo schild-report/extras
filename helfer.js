@@ -124,12 +124,13 @@ export const updater = (schueler) => {
       s.username = o.username || `${slugify(s.Vorname).slice(0,3)}${slugify(s.Name).slice(0,4)}`.toLowerCase();
       s.slug = o.slug || `${slugify(s.Vorname)}.${slugify(s.Name)}`;
       console.log(JSON.stringify(s));
-      counter++
+      counter++;
+      names.delete(s.GU_ID);
     }
     if (set.has(s.username))
-      throw new Error(`doppelter Username, muss ersetzt werden: names.set("${s.GU_ID}", {username: "${slugify(s.Vorname).slice(0,2).toLowerCase()}${slugify(s.Name).slice(0,5).toLowerCase()}"});`);
+      throw new Error(`doppelter Username, muss ersetzt werden: <br>names.set("${s.GU_ID}", {username: "${slugify(s.Vorname).slice(0,2).toLowerCase()}${slugify(s.Name).slice(0,5).toLowerCase()}"});`);
     set.add(s.username);
   }
-  console.log(hashset.size, 'Hashes erstellt, ', counter, 'Usernames ersetzt.');
+  console.log(hashset.size, 'Hashes erstellt, ', `${counter} Usernames ersetzt.`, names.size > 0 ? [...names.values()].map(v=>v.username).toString():'');
   return schueler;
 }
