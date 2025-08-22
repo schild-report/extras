@@ -15,7 +15,7 @@
                 <div>Passwort: <code>{h(s.hash)}</code></div>
                 <div>Teams: <code>{s.username}@{privat.domain}</code></div>
               </div>
-              <b>Zugangsdaten zum Pädagogischen Netz des {privat.schulname} für das Schuljahr 2024/25</b>
+              <b>Zugangsdaten zum Pädagogischen Netz des {privat.schulname} für das Schuljahr 2025/26</b>
               <br>Mit der Verwendung der Zugangsdaten bestätigen Sie Ihre Zustimmung zur Nutzungsordnung für das
               Pädagogische Netz.
               <br>Unter <b>https://{privat.meinbk}</b> können Sie einen persönlichen WLAN-Zugang anfordern.

@@ -97,6 +97,15 @@ export function slugify(text, separator) {
   return text;
 }
 
+function generateHash(str) {
+		let hash = 0;
+		if (str.length === 0)
+			return hash;
+		for (let i = 0; i < str.length; i++)
+			hash = (((hash << 5) - hash) + str.charCodeAt(i)) | 0;
+		return Math.abs(hash);
+}
+
 // im kommenden Jahr sollen die Passwörter mit Hilfe der Usernames ermittelt werden, die nun individuell sind + hash
 import { names } from "./names";
 export const updater = (schueler) => {
@@ -111,18 +120,14 @@ export const updater = (schueler) => {
     if (s.Geburtsdatum.toString().length > 10)
       s.Geburtsdatum = new Date(s.Geburtsdatum).toJSON().slice(0, 10);
     s.username = `${slugify(s.Vorname).slice(0, 3)}${slugify(s.Name).slice(0,4)}`.toLowerCase();
-    s.slug = `${slugify(s.Vorname)}.${slugify(s.Name)}`;
+    // s.slug = `${slugify(s.Vorname)}.${slugify(s.Name)}`;
     s.Klasse = /^.*[0-9]{2,}.*?$/.test(s.Klasse) ? s.Klasse.slice(0, -1) : s.Klasse;
-    s.hash = parseInt(s.Geburtsdatum.replaceAll("-", "")+(s.Vorname.charCodeAt(0)+s.Vorname.length));
-    if (hashset.has(s.hash))
-      console.warn('Hash mehrfach vorhanden', s.Name, s.Vorname, s.Geburtsdatum, s.hash, s.Klasse)
-    hashset.add(s.hash)
     const o = names.get(s.GU_ID);
     if (o) {
       s.Vorname = o.name || s.Vorname;
       s.Geschlecht = o.geschlecht || s.Geschlecht;
       s.username = o.username || `${slugify(s.Vorname).slice(0,3)}${slugify(s.Name).slice(0,4)}`.toLowerCase();
-      s.slug = o.slug || `${slugify(s.Vorname)}.${slugify(s.Name)}`;
+      // s.slug = o.slug || `${slugify(s.Vorname)}.${slugify(s.Name)}`;
       console.log(JSON.stringify(s));
       counter++;
       names.delete(s.GU_ID);
@@ -130,7 +135,11 @@ export const updater = (schueler) => {
     if (set.has(s.username))
       throw new Error(`doppelter Username, muss ersetzt werden: <br>names.set("${s.GU_ID}", {username: "${slugify(s.Vorname).slice(0,2).toLowerCase()}${slugify(s.Name).slice(0,5).toLowerCase()}"});`);
     set.add(s.username);
+    s.hash = generateHash(s.username);
+    if (hashset.has(s.hash))
+      console.warn('Hash mehrfach vorhanden', s.Name, s.Vorname, s.Geburtsdatum, s.hash, s.Klasse);
+    hashset.add(s.hash)
   }
-  console.log(hashset.size, 'Hashes erstellt, ', `${counter} Usernames ersetzt.`, names.size > 0 ? [...names.values()].map(v=>v.username).toString():'');
+  console.log(hashset.size, 'Hashes erstellt, ', `${counter} Usernames ersetzt.`, (names.size > 0) ? [...names.values()].map(v => v.username).toString():'');
   return schueler;
 }

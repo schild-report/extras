@@ -32,14 +32,13 @@ Siehe auch https://docs.software-univention.de/ucsschool-import-handbuch-4.4.htm
   let regel = [], foerder = [], schueler = [], error;
   if (!privat.paedml_salt) throw "Kein Salt";
   if (!privat.domain) throw "Keine Domain";
-  const hashids = new Hashids( privat.paedml_salt, 8, "abcdefghkmnpqrstuvwxyz23456789");
+  const hashids = new Hashids(privat.paedml_salt, 8, "abcdefghkmnpqrstuvwxyz23456789");
   const h = (id) => hashids.encode(id);
   const mysql_connection = mysql.createConnection(knexConfig.connection);
   knexConfig.connection.database="schild_kbk"
   const mysql_connection2 = mysql.createConnection(knexConfig.connection);
   mysql_connection.connect();
   mysql_connection2.connect();
-  // const hasNonAsciiCharacters = (str) => /[^\u0000-\u007f]/.test(str);
   const query = `SELECT s.ID, Name, Vorname, Klasse, Geburtsdatum, GU_ID
                           FROM schueler s
                           WHERE s.Status = 2 AND s.Geloescht = "-" AND s.Gesperrt = "-"
@@ -48,13 +47,14 @@ Siehe auch https://docs.software-univention.de/ucsschool-import-handbuch-4.4.htm
   mysql_connection2.query(query, async (e,res)=> e ? console.log(e, "förder"): (foerder = res))
   $: {
     try {
-      if (regel.length && foerder.length)
-      schueler = updater(regel.concat(foerder));
-    console.log('Datensätze verarbeitet: ', schueler.length + '/' + (regel.length+foerder.length))
+      if ((regel.length > 0) && (foerder.length > 0)) {
+        schueler = updater(regel.concat(foerder));
+        console.log('Datensätze verarbeitet: ', schueler.length + '/' + (regel.length+foerder.length));
+      }
     } catch (e) {
       error = e.message;
     }
-    };
+  };
 </script>
 {#if schueler.length}
 <pre>ID,Nachname,Vornamen,Klasse,Passwort,Geburtstag,Email

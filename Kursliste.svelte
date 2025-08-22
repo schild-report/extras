@@ -14,7 +14,7 @@
   LEFT JOIN kurse AS k ON (k.ID = f.Kurs_ID)
   LEFT JOIN eigeneschule_faecher AS ff ON (ff.ID = f.Fach_ID)
   WHERE Status = 2 AND Geloescht = "-" AND Gesperrt = "-"
-  GROUP BY Name`,
+  GROUP BY Name;`,
     (e, res) => {
       console.log(e);
       gruppe = res;
