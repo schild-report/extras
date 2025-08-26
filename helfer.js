@@ -133,7 +133,7 @@ export const updater = (schueler) => {
       names.delete(s.GU_ID);
     }
     if (set.has(s.username))
-      throw new Error(`doppelter Username, muss ersetzt werden: <br>names.set("${s.GU_ID}", {username: "${slugify(s.Vorname).slice(0,2).toLowerCase()}${slugify(s.Name).slice(0,5).toLowerCase()}"});`);
+      throw new Error(`doppelter Username, muss ersetzt werden: <br>names.set("${s.GU_ID}", {username: "${slugify(s.Vorname).slice(0,2).toLowerCase()}${slugify(s.Name).slice(0,5).toLowerCase()}"});// ${s.Vorname} ${s.Name}`);
     set.add(s.username);
     s.hash = generateHash(s.username);
     if (hashset.has(s.hash))
