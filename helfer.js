@@ -114,7 +114,7 @@ export const updater = (schueler) => {
   let counter = 0;
   for (const s of schueler) {
     if (s.Geburtsdatum === null) {
-      console.log(s.Vorname, s.Name, "ohne Geburtsdatum");
+      // console.log(s.Vorname, s.Name, "ohne Geburtsdatum");
       s.Geburtsdatum = new Date();
     }
     if (s.Geburtsdatum.toString().length > 10)
