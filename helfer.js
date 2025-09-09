@@ -125,6 +125,7 @@ export const updater = (schueler) => {
     if (o) {
       s.Vorname = o.name || s.Vorname;
       s.Geschlecht = o.geschlecht || s.Geschlecht;
+      s.Klasse = o.klasse || s.Klasse;
       s.username = o.username || `${slugify(s.Vorname).slice(0,3)}${slugify(s.Name).slice(0,4)}`.toLowerCase();
       console.log(JSON.stringify(s));
       counter++;
