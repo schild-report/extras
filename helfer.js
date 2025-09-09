@@ -31,10 +31,10 @@ export const bemerkungen = (hj) => hj.ZeugnisBem ? hj.ZeugnisBem.replace('\r\n',
 export const volljaehrigBei = (s, datum) => {
   // gibt an, ob der Schüler *s* zu einem Zeitpunkt *datum* volljährig war
   try {
-  const g = new Date(s.Geburtsdatum)
-  const d = new Date(datum)
-  const volljaehrig = d.getFullYear() - g.getFullYear() - ((d.getMonth() > g.getMonth() || (d.getMonth() == g.getMonth() && d.getDay() >= g.getDay()) ? 0 : 1)) >= 18
-  return volljaehrig
+    const g = new Date(s.Geburtsdatum)
+    const d = new Date(datum)
+    const volljaehrig = d.getFullYear() - g.getFullYear() - ((d.getMonth() > g.getMonth() || (d.getMonth() == g.getMonth() && d.getDay() >= g.getDay()) ? 0 : 1)) >= 18
+    return volljaehrig
   } catch (e) {console.log(e); return}
 }
 export const note = (note) => noten[parseInt(note)] || enoten[note]
@@ -120,14 +120,12 @@ export const updater = (schueler) => {
     if (s.Geburtsdatum.toString().length > 10)
       s.Geburtsdatum = new Date(s.Geburtsdatum).toJSON().slice(0, 10);
     s.username = `${slugify(s.Vorname).slice(0, 3)}${slugify(s.Name).slice(0,4)}`.toLowerCase();
-    // s.slug = `${slugify(s.Vorname)}.${slugify(s.Name)}`;
     s.Klasse = /^.*[0-9]{2,}.*?$/.test(s.Klasse) ? s.Klasse.slice(0, -1) : s.Klasse;
     const o = names.get(s.GU_ID);
     if (o) {
       s.Vorname = o.name || s.Vorname;
       s.Geschlecht = o.geschlecht || s.Geschlecht;
       s.username = o.username || `${slugify(s.Vorname).slice(0,3)}${slugify(s.Name).slice(0,4)}`.toLowerCase();
-      // s.slug = o.slug || `${slugify(s.Vorname)}.${slugify(s.Name)}`;
       console.log(JSON.stringify(s));
       counter++;
       names.delete(s.GU_ID);
@@ -140,6 +138,7 @@ export const updater = (schueler) => {
       console.warn('Hash mehrfach vorhanden', s.Name, s.Vorname, s.Geburtsdatum, s.hash, s.Klasse);
     hashset.add(s.hash)
   }
-  console.log(hashset.size, 'Hashes erstellt, ', `${counter} Usernames ersetzt.`, (names.size > 0) ? [...names.values()].map(v => v.username).toString():'');
+  console.log(hashset.size, 'Hashes erstellt, ', `${counter} Usernames ersetzt.`)
+  console.log((names.size > 0) ? `${[...names.values()].map(v => v.username).toString()} entfernen`:'');
   return schueler;
 }
