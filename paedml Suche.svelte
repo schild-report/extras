@@ -26,7 +26,7 @@
       error = e.message;
     }
   };
-  $: filtered = schueler.filter(s => s.Name.toLocaleLowerCase().includes(value.toLocaleLowerCase()) || s.Vorname.toLocaleLowerCase().includes(value.toLocaleLowerCase()) || s.Klasse.toLocaleLowerCase().includes(value.toLocaleLowerCase()));
+  $: filtered = schueler.filter(s => s.Name.toLocaleLowerCase().includes(value.toLocaleLowerCase()) || s.Vorname.toLocaleLowerCase().includes(value.toLocaleLowerCase()) || s.Klasse?.toLocaleLowerCase().includes(value.toLocaleLowerCase()));
 </script>
 <input bind:value /><input type="checkbox" bind:checked /> Klasse
 {#if filtered.length}
