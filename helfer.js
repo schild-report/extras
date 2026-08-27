@@ -125,6 +125,7 @@ export const updater = (schueler) => {
     if (o) {
       s.Vorname = o.name || s.Vorname;
       s.Geschlecht = o.geschlecht || s.Geschlecht;
+      s.Nachname = o.nachname || s.Nachname;
       s.Klasse = o.klasse || s.Klasse;
       s.username = o.username || `${slugify(s.Vorname).slice(0,3)}${slugify(s.Name).slice(0,4)}`.toLowerCase();
       console.log(JSON.stringify(s));
@@ -140,6 +141,6 @@ export const updater = (schueler) => {
     hashset.add(s.hash)
   }
   console.log(hashset.size, 'Hashes erstellt, ', `${counter} Usernames ersetzt.`)
-  console.log((names.size > 0) ? `${[...names.values()].map(v => v.username).toString()} entfernen`:'');
+  console.log((names.size > 0) ? `${[...names.entries()].map(([k,v]) => v.username ?? k).toString()} entfernen`:'');
   return schueler;
 }
