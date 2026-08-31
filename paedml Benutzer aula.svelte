@@ -67,5 +67,6 @@ Siehe auch https://docs.software-univention.de/ucsschool-import-handbuch-4.4.htm
     <div>{klasse}</div>
     <pre>realname;displayname;username;email;about_me
 {#each schueler as s}{s.Vorname} {s.Name};{s.Vorname} {s.Name};{s.username};;<br>{/each}</pre>
+<br>
 {/if}
 {/each}
