@@ -39,7 +39,7 @@ Siehe auch https://docs.software-univention.de/ucsschool-import-handbuch-4.4.htm
   const mysql_connection2 = mysql.createConnection(knexConfig.connection);
   mysql_connection.connect();
   mysql_connection2.connect();
-  const query = `SELECT s.ID, Name, Vorname, Klasse, Geburtsdatum, GU_ID
+  const query = `SELECT s.ID, Name, Vorname, Klasse, Geburtsdatum, GU_ID, Aufnahmedatum
                           FROM schueler s
                           WHERE s.Status = 2 AND s.Geloescht = "-" AND s.Gesperrt = "-"
                           ORDER BY Klasse, Name ASC`

@@ -109,6 +109,7 @@ function generateHash(str) {
 // im kommenden Jahr sollen die Passwörter mit Hilfe der Usernames ermittelt werden, die nun individuell sind + hash
 import { names } from "./names";
 export const updater = (schueler) => {
+  schueler.sort((a,b) => new Date(a.Aufnahmedatum) - new Date(b.Aufnahmedatum))
   const set = new Set();
   const hashset = new Set();
   let counter = 0;
