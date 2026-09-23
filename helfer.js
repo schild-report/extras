@@ -109,21 +109,28 @@ function generateHash(str) {
 // im kommenden Jahr sollen die Passwörter mit Hilfe der Usernames ermittelt werden, die nun individuell sind + hash
 import { names } from "./names";
 export const updater = (schueler) => {
-  schueler.sort((a,b) => new Date(a.Aufnahmedatum) - new Date(b.Aufnahmedatum))
-  const set = new Set();
+  schueler.sort((a,b) => new Date(a.Aufnahmedatum).getTime() - new Date(b.Aufnahmedatum).getTime());
+  const ret = [];
+  const map = new Map();
   const hashset = new Set();
   let counter = 0;
   for (const s of schueler) {
     if (s.Geburtsdatum === null) {
-      // console.log(s.Vorname, s.Name, "ohne Geburtsdatum");
+      console.log(s.Vorname, s.Name, "ohne Geburtsdatum");
       s.Geburtsdatum = new Date();
     }
     if (s.Geburtsdatum.toString().length > 10)
       s.Geburtsdatum = new Date(s.Geburtsdatum).toJSON().slice(0, 10);
-    s.username = `${slugify(s.Vorname).slice(0, 3)}${slugify(s.Name).slice(0,4)}`.toLowerCase();
+    try {
+      s.username = `${slugify(s.Vorname).slice(0, 3)}${slugify(s.Name).slice(0,4)}`.toLowerCase();
+    } catch { console.log(s); continue; }
     s.Klasse = /^.*[0-9]{2,}.*?$/.test(s.Klasse) ? s.Klasse.slice(0, -1) : s.Klasse;
     const o = names.get(s.GU_ID);
     if (o) {
+   		if (o.skip) {
+				names.delete(s.GU_ID);
+				continue;
+			}
       s.Vorname = o.name || s.Vorname;
       s.Geschlecht = o.geschlecht || s.Geschlecht;
       s.Nachname = o.nachname || s.Nachname;
@@ -133,15 +140,18 @@ export const updater = (schueler) => {
       counter++;
       names.delete(s.GU_ID);
     }
-    if (set.has(s.username))
-      throw new Error(`doppelter Username, muss ersetzt werden: <br>names.set("${s.GU_ID}", {username: "${slugify(s.Vorname).slice(0,2).toLowerCase()}${slugify(s.Name).slice(0,5).toLowerCase()}"});// ${s.Vorname} ${s.Name}`);
-    set.add(s.username);
+			if (map.has(s.username)) {
+				console.log(map.get(s.username));
+				throw new Error(`doppelter Username, muss ersetzt werden: <br>names.set("${s.GU_ID}", {username: "${slugify(s.Vorname).slice(0, 2).toLowerCase()}${slugify(s.Name).slice(0, 5).toLowerCase()}"});// ${s.Vorname} ${s.Name}`);
+			}
+    map.set(s.username, s);
     s.hash = generateHash(s.username);
     if (hashset.has(s.hash))
       console.warn('Hash mehrfach vorhanden', s.Name, s.Vorname, s.Geburtsdatum, s.hash, s.Klasse);
     hashset.add(s.hash)
+    ret.push(s);
   }
   console.log(hashset.size, 'Hashes erstellt, ', `${counter} Usernames ersetzt.`)
   console.log((names.size > 0) ? `${[...names.entries()].map(([k,v]) => v.username ?? k).toString()} entfernen`:'');
-  return schueler;
+  return ret;
 }
